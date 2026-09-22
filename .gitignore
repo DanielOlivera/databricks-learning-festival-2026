@@ -1,0 +1,25 @@
+# Sistema
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Python / notebooks locales
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# Credenciales y config local (nunca subir)
+.env
+*.pem
+*.key
+databricks.cfg
+.databrickscfg
+
+# Salidas grandes o temporales
+*.log
+tmp/
+
+# Zips regenerables de notebooks
+*_notebooks.zip
