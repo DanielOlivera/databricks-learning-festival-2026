@@ -32,6 +32,15 @@ El navegador exige `http://` para service workers, manifest e instalacion como P
 sin logs y sin exponer nada a la red. Si el puerto ya esta ocupado, la segunda instancia
 se cierra sola, asi que abrir el acceso directo dos veces no duplica procesos.
 
+## Que vive aqui y que no
+
+`app/` trae la logica, los datos y el empaquetado PWA. Todo lo visual esta en
+[`../ui/`](../ui/README.md): colores, tipografia, iconos y componentes. Al tocar la interfaz
+se lee primero [`../ui/DESIGN.md`](../ui/DESIGN.md).
+
+El servidor sirve la raiz del repositorio, no `app/`, para que la app pueda cargar `/ui`.
+Por eso la direccion es `http://localhost:8765/app/index.html`.
+
 ## Modulos
 
 | Modulo | Que hace |
@@ -56,7 +65,7 @@ porcentaje de Dominio del panel.
 
 ## Donde viven los datos
 
-- **Material de estudio**: `app/data/seed.js`. Es texto plano y versionado en git.
+- **Material de estudio**: `data/seed.js`. Es texto plano y versionado en git.
   Para agregar tarjetas, gotchas, snippets o preguntas, se edita ese archivo.
 - **Tu avance** (repeticiones, fechas, racha, notas propias): `localStorage` del navegador.
   No se sube a ningun lado. Usa **Exportar datos** para bajar un JSON de respaldo e

@@ -82,6 +82,10 @@ aprendizaje por repeticion. Se abre con el acceso directo **Databricks Study Lab
 El material esta en `app/data/seed.js` (versionado). El avance personal queda en el navegador,
 con exportar e importar en JSON. Detalles en [`app/README.md`](app/README.md).
 
+La capa visual vive aparte, en [`ui/`](ui/): tokens, tipografia auto-hospedada, iconos y el
+sistema documentado en [`ui/DESIGN.md`](ui/DESIGN.md), construido siguiendo
+[Impeccable](https://github.com/pbakaus/impeccable).
+
 ## Seguimiento del progreso
 
 `tools/track.py` lleva el avance leccion por leccion en `01_plan/progreso.csv`, que no se versiona porque es personal.

@@ -1,0 +1,114 @@
+/* ============================================================
+   Tokens. Unica fuente de valores: ningun componente inventa
+   colores, tamanos ni tiempos fuera de este archivo.
+   Espacio de color OKLCH: lightness y chroma se ajustan de forma
+   predecible al derivar estados.
+   ============================================================ */
+
+:root {
+  /* --- Superficies. Tema noche, el escenario real de uso --- */
+  --canvas:        oklch(0.175 0.013 52);   /* fondo de la ventana */
+  --sunken:        oklch(0.152 0.012 52);   /* zonas hundidas: codigo, listas */
+  --surface:       oklch(0.222 0.014 52);   /* paneles */
+  --surface-raise: oklch(0.262 0.016 52);   /* controles sobre panel */
+  --rule:          oklch(0.318 0.016 52);   /* hairline visible */
+  --rule-soft:     oklch(0.258 0.013 52);   /* hairline de separacion interna */
+
+  /* --- Texto. Tintado desde el mismo hue calido, nunca gris puro --- */
+  --text:          oklch(0.955 0.008 75);
+  --text-2:        oklch(0.775 0.018 70);
+  --text-3:        oklch(0.638 0.021 68);
+
+  /* --- Roles de color ---
+     ember: accion, marca y foco de atencion. Escaso por diseno.
+     signal: medicion y datos. Nunca compite con ember por la accion. */
+  --ember:         oklch(0.685 0.185 38);
+  --ember-hi:      oklch(0.745 0.175 40);
+  --ember-dim:     oklch(0.435 0.105 38);
+  --ember-wash:    oklch(0.30 0.055 38);
+  --signal:        oklch(0.815 0.115 205);
+  --signal-dim:    oklch(0.45 0.07 205);
+
+  /* --- Semanticos. Siempre acompanados de texto o forma --- */
+  --ok:            oklch(0.795 0.145 158);
+  --ok-dim:        oklch(0.42 0.08 158);
+  --warn:          oklch(0.835 0.135 85);
+  --warn-dim:      oklch(0.45 0.08 85);
+  --danger:        oklch(0.705 0.165 18);
+  --danger-dim:    oklch(0.40 0.09 18);
+
+  /* --- Tipografia --- */
+  --font-display: 'Bricolage Grotesque', 'Segoe UI', sans-serif;
+  --font-text:    'Instrument Sans', 'Segoe UI', sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, Consolas, monospace;
+
+  --t-display:    clamp(1.75rem, 1.1rem + 1.8vw, 2.5rem);
+  --t-title:      1.25rem;
+  --t-question:   clamp(1.25rem, 0.95rem + 1vw, 1.625rem);
+  --t-body-lg:    1.0625rem;
+  --t-body:       0.9375rem;
+  --t-meta:       0.8125rem;
+  --t-label:      0.6875rem;
+
+  --lh-tight:     1.1;
+  --lh-snug:      1.35;
+  --lh-body:      1.6;
+  --track-display: -0.03em;
+  --track-title:  -0.02em;
+  --track-label:  0.09em;
+
+  /* --- Espacio. Base 4, con los pasos intermedios que un 8 puro pierde --- */
+  --s1: 0.25rem;  --s2: 0.5rem;   --s3: 0.75rem;  --s4: 1rem;
+  --s5: 1.25rem;  --s6: 1.5rem;   --s8: 2rem;     --s10: 2.5rem;
+  --s12: 3rem;    --s16: 4rem;
+
+  /* --- Forma --- */
+  --r-sm: 6px;  --r-md: 10px;  --r-lg: 14px;  --r-xl: 20px;  --r-pill: 999px;
+
+  /* --- Profundidad. Siempre offset mas blur suave, nunca halo plano --- */
+  --e1: 0 1px 2px oklch(0.10 0.01 52 / 0.5), 0 3px 10px -4px oklch(0.10 0.01 52 / 0.45);
+  --e2: 0 2px 4px oklch(0.10 0.01 52 / 0.45), 0 16px 32px -12px oklch(0.08 0.01 52 / 0.6);
+
+  /* --- Movimiento. Desaceleracion natural, nunca rebote --- */
+  --t-fast: 120ms;
+  --t-base: 200ms;
+  --t-slow: 320ms;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* --- Estructura --- */
+  --side-w: 236px;
+  --measure: 68ch;
+}
+
+/* Tema dia. Compuesto aparte, no es una inversion del tema noche:
+   el papel es calido, las reglas mas suaves y el ember baja de
+   lightness para no vibrar sobre fondo claro. */
+:root[data-tema="dia"] {
+  --canvas:        oklch(0.975 0.008 85);
+  --sunken:        oklch(0.945 0.010 85);
+  --surface:       oklch(0.995 0.004 85);
+  --surface-raise: oklch(0.962 0.008 85);
+  --rule:          oklch(0.885 0.012 78);
+  --rule-soft:     oklch(0.925 0.010 80);
+
+  --text:          oklch(0.235 0.020 55);
+  --text-2:        oklch(0.455 0.022 60);
+  --text-3:        oklch(0.585 0.020 62);
+
+  --ember:         oklch(0.585 0.185 35);
+  --ember-hi:      oklch(0.525 0.185 33);
+  --ember-dim:     oklch(0.86 0.055 45);
+  --ember-wash:    oklch(0.945 0.028 50);
+  --signal:        oklch(0.545 0.115 218);
+  --signal-dim:    oklch(0.90 0.045 210);
+
+  --ok:            oklch(0.545 0.125 158);
+  --ok-dim:        oklch(0.90 0.055 158);
+  --warn:          oklch(0.635 0.125 72);
+  --warn-dim:      oklch(0.92 0.055 85);
+  --danger:        oklch(0.545 0.175 22);
+  --danger-dim:    oklch(0.92 0.045 22);
+
+  --e1: 0 1px 2px oklch(0.45 0.03 60 / 0.10), 0 3px 10px -4px oklch(0.45 0.03 60 / 0.12);
+  --e2: 0 2px 4px oklch(0.45 0.03 60 / 0.10), 0 16px 32px -12px oklch(0.45 0.03 60 / 0.18);
+}

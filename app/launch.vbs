@@ -6,7 +6,7 @@ Set fso = CreateObject("Scripting.FileSystemObject")
 
 carpeta = fso.GetParentFolderName(WScript.ScriptFullName)
 puerto = "8765"
-url = "http://127.0.0.1:" & puerto & "/index.html"
+url = "http://127.0.0.1:" & puerto & "/app/index.html"
 
 pythonw = "pythonw"
 If fso.FileExists(sh.ExpandEnvironmentStrings("%LOCALAPPDATA%") & "\Programs\Python\Python312\pythonw.exe") Then

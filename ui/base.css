@@ -1,0 +1,113 @@
+/* ============================================================
+   Base: reset corto, roles tipograficos y superficies del
+   navegador. Las superficies que no se dibujan (seleccion,
+   cursor de texto, scrollbar, anillo de foco) tambien llevan
+   el diseno: es lo que separa una pagina construida de una
+   ensamblada.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-text);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  font-feature-settings: "cv05" 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- Roles tipograficos --- */
+h1, h2, h3, h4 { margin: 0; font-family: var(--font-display); font-weight: 600; }
+
+.t-display {
+  font-size: var(--t-display);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--track-display);
+  font-weight: 700;
+  text-wrap: balance;
+}
+.t-title {
+  font-size: var(--t-title);
+  line-height: var(--lh-snug);
+  letter-spacing: var(--track-title);
+  text-wrap: balance;
+}
+.t-label {
+  font-family: var(--font-text);
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.t-meta { font-size: var(--t-meta); color: var(--text-2); }
+.t-hint { font-size: var(--t-meta); color: var(--text-3); max-width: var(--measure); }
+.t-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "zero" 1;
+  letter-spacing: -0.01em;
+}
+
+p { margin: 0 0 var(--s3); max-width: var(--measure); }
+a { color: var(--ember); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+
+code, pre { font-family: var(--font-mono); }
+
+/* --- Superficies del navegador --- */
+::selection { background: var(--ember-wash); color: var(--text); }
+:root { accent-color: var(--ember); caret-color: var(--ember); color-scheme: dark; }
+:root[data-tema="dia"] { color-scheme: light; }
+
+* { scrollbar-width: thin; scrollbar-color: var(--rule) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--rule);
+  border: 3px solid var(--canvas);
+  border-radius: var(--r-pill);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
+
+:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+:focus:not(:focus-visible) { outline: none; }
+
+/* --- Iconos: trazo unico, tamano heredado --- */
+.i {
+  width: 1.125em;
+  height: 1.125em;
+  flex: none;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.i-lg { width: 1.5em; height: 1.5em; }
+
+/* --- Utilidades minimas --- */
+.hidden { display: none !important; }
+.stack { display: flex; flex-direction: column; }
+.row { display: flex; align-items: center; }
+.gap2 { gap: var(--s2); }
+.gap3 { gap: var(--s3); }
+.gap4 { gap: var(--s4); }
+.push { margin-left: auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

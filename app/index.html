@@ -1,185 +1,227 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-tema="noche">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Databricks Study Lab</title>
-<meta name="theme-color" content="#0b0f1a">
+<title>Study Lab</title>
+<meta name="description" content="Repaso espaciado, gotchas y simulacros para las certificaciones de Databricks">
+<meta name="theme-color" content="#221a16">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icons/icon-192.png">
-<link rel="stylesheet" href="css/styles.css">
+<link rel="icon" href="../ui/icons/icon-192.png">
+<link rel="preload" href="../ui/fonts/bricolage-grotesque-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../ui/fonts/instrument-sans-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../ui/fonts/fonts.css">
+<link rel="stylesheet" href="../ui/tokens.css">
+<link rel="stylesheet" href="../ui/base.css">
+<link rel="stylesheet" href="../ui/components.css">
 </head>
 <body>
-<div class="layout">
+<div class="shell">
   <aside class="side">
-    <div class="brand">
-      <span class="brand-mark"></span>
-      <div>
-        <strong>Study Lab</strong>
-        <small>Databricks 2026</small>
-      </div>
+    <div class="mark">
+      <span class="mark-sigil"><svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-sigil"></use></svg></span>
+      <span>
+        <span class="mark-name">Study Lab</span>
+        <span class="mark-sub">Databricks</span>
+      </span>
     </div>
-    <nav id="nav">
-      <button data-view="panel" class="active"><span class="ico">01</span> Panel</button>
-      <button data-view="repaso"><span class="ico">02</span> Repaso <span class="pill" id="pill-due">0</span></button>
-      <button data-view="gotchas"><span class="ico">03</span> Gotchas</button>
-      <button data-view="snippets"><span class="ico">04</span> Cheatsheets</button>
-      <button data-view="examen"><span class="ico">05</span> Examen</button>
+
+    <nav class="nav" id="nav" aria-label="Secciones">
+      <button class="nav-item" data-view="panel" aria-current="page">
+        <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-panel"></use></svg> Panel</button>
+      <button class="nav-item" data-view="repaso">
+        <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-repaso"></use></svg> Repaso
+        <span class="count" id="count-due">0</span></button>
+      <button class="nav-item" data-view="gotchas">
+        <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-gotcha"></use></svg> Gotchas</button>
+      <button class="nav-item" data-view="snippets">
+        <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-codigo"></use></svg> Cheatsheets</button>
+      <button class="nav-item" data-view="examen">
+        <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-examen"></use></svg> Examen</button>
     </nav>
+
     <div class="side-foot">
-      <div class="streak-box">
-        <span class="streak-num" id="streak">0</span>
-        <span class="streak-lbl">días seguidos</span>
-      </div>
-      <button class="primary hidden" id="btn-instalar">Instalar como app</button>
-      <button class="ghost" id="btn-tema">Tema claro</button>
-      <button class="ghost" id="btn-export">Exportar datos</button>
-      <button class="ghost" id="btn-import">Importar datos</button>
+      <p class="streak"><span class="streak-val" id="streak">0</span><span class="streak-key">dias seguidos</span></p>
+      <button class="btn btn-key hidden" id="btn-instalar">
+        <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-instalar"></use></svg> Instalar como app</button>
+      <button class="btn btn-quiet" id="btn-tema">
+        <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-dia"></use></svg> <span id="tema-txt">Tema dia</span></button>
+      <button class="btn btn-quiet" id="btn-export">
+        <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-exportar"></use></svg> Exportar</button>
+      <button class="btn btn-quiet" id="btn-import">
+        <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-importar"></use></svg> Importar</button>
       <input type="file" id="file-import" accept="application/json" hidden>
     </div>
   </aside>
 
-  <main id="main">
+  <main class="main" id="main">
     <!-- PANEL -->
     <section class="view" id="view-panel">
-      <header class="view-head">
+      <div class="today">
         <div>
-          <h1>Panel</h1>
-          <p class="sub" id="panel-sub">Cargando</p>
+          <h1 class="today-line" id="today-line">Cargando</h1>
+          <p class="today-note" id="today-note"></p>
         </div>
-        <button class="primary" id="btn-repasar-ya">Repasar ahora</button>
-      </header>
+        <button class="btn btn-key" id="btn-repasar">Empezar repaso
+          <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-flecha"></use></svg></button>
+      </div>
 
-      <div class="grid-kpi">
-        <div class="kpi">
-          <div class="ring" id="ring-dominio"><svg viewBox="0 0 120 120"><circle class="ring-bg" cx="60" cy="60" r="52"></circle><circle class="ring-fg" cx="60" cy="60" r="52"></circle></svg><span class="ring-val" id="val-dominio">0%</span></div>
-          <div class="kpi-txt"><strong>Dominio</strong><small>tarjetas con intervalo de 7 días o más</small></div>
+      <div class="figures">
+        <div class="figure">
+          <span class="figure-val" data-acento="ember" id="fig-dominio">0<span class="figure-unit">%</span></span>
+          <span class="figure-key">Dominio</span>
         </div>
-        <div class="kpi">
-          <div class="big" id="val-due">0</div>
-          <div class="kpi-txt"><strong>Para hoy</strong><small>tarjetas que toca repasar</small></div>
+        <div class="figure">
+          <span class="figure-val" id="fig-nuevas">0</span>
+          <span class="figure-key">Sin ver</span>
         </div>
-        <div class="kpi">
-          <div class="big" id="val-nuevas">0</div>
-          <div class="kpi-txt"><strong>Sin ver</strong><small>tarjetas nuevas en la baraja</small></div>
+        <div class="figure">
+          <span class="figure-val" data-acento="signal" id="fig-hoy">0</span>
+          <span class="figure-key">Repasadas hoy</span>
         </div>
-        <div class="kpi">
-          <div class="big" id="val-hoy">0</div>
-          <div class="kpi-txt"><strong>Repasadas hoy</strong><small id="val-acierto">acierto 0%</small></div>
+        <div class="figure">
+          <span class="figure-val" id="fig-acierto">0<span class="figure-unit">%</span></span>
+          <span class="figure-key">Acierto de hoy</span>
         </div>
       </div>
 
-      <div class="panel-cols">
-        <div class="card">
-          <h2>Constancia</h2>
+      <div class="panel-pair">
+        <section>
+          <div class="block-title">
+            <h2 class="t-title">Constancia</h2>
+            <span class="t-meta" id="heat-rango"></span>
+          </div>
           <div class="heat" id="heat"></div>
-          <p class="hint">Cada cuadro es un día de los últimos 8 semanas. Más claro significa más repasos.</p>
-        </div>
-        <div class="card">
-          <h2>Dominio por tema</h2>
-          <div id="temas"></div>
-        </div>
+          <p class="t-hint">Ocho semanas. Cuanto mas encendido el cuadro, mas tarjetas repasaste ese dia.</p>
+        </section>
+        <section>
+          <div class="block-title">
+            <h2 class="t-title">Dominio por tema</h2>
+            <span class="t-meta">intervalo de 7 dias o mas</span>
+          </div>
+          <div class="rows" id="temas"></div>
+        </section>
       </div>
 
-      <div class="card">
-        <h2>Cursos</h2>
-        <div class="cursos" id="cursos"></div>
-      </div>
+      <section>
+        <div class="block-title"><h2 class="t-title">Cursos del festival</h2></div>
+        <div id="cursos"></div>
+      </section>
     </section>
 
     <!-- REPASO -->
     <section class="view hidden" id="view-repaso">
-      <header class="view-head">
+      <header class="head">
         <div>
-          <h1>Repaso</h1>
-          <p class="sub" id="repaso-sub"></p>
+          <h1 class="t-display">Repaso</h1>
+          <p class="head-sub" id="repaso-sub"></p>
         </div>
-        <select id="filtro-curso" class="select"></select>
+        <select id="filtro-curso" class="field" style="width:auto" aria-label="Filtrar por curso"></select>
       </header>
 
-      <div class="flash-wrap">
-        <div class="flash" id="flash">
-          <div class="flash-meta"><span id="flash-tema"></span><span id="flash-estado"></span></div>
-          <div class="flash-q" id="flash-q"></div>
-          <div class="flash-a hidden" id="flash-a"></div>
-          <button class="primary wide" id="btn-mostrar">Mostrar respuesta <kbd>espacio</kbd></button>
-          <div class="grades hidden" id="grades">
-            <button data-g="0" class="g g0">Otra vez <kbd>1</kbd><small id="lbl-g0"></small></button>
-            <button data-g="3" class="g g3">Difícil <kbd>2</kbd><small id="lbl-g3"></small></button>
-            <button data-g="4" class="g g4">Bien <kbd>3</kbd><small id="lbl-g4"></small></button>
-            <button data-g="5" class="g g5">Fácil <kbd>4</kbd><small id="lbl-g5"></small></button>
+      <div class="study" id="study">
+        <article class="card-face">
+          <div class="card-top">
+            <span class="t-label" id="card-tema"></span>
+            <span class="t-label t-num" id="card-estado"></span>
           </div>
-        </div>
-        <div class="flash-side">
-          <div class="card mini">
-            <h3>Cola de hoy</h3>
+          <h2 class="card-q" id="card-q"></h2>
+          <div class="card-a hidden" id="card-a"></div>
+          <button class="btn btn-key btn-wide" id="btn-mostrar" style="margin-top:auto">
+            Mostrar respuesta <kbd>espacio</kbd></button>
+          <div class="grades hidden" id="grades">
+            <button class="grade" data-g="0">Otra vez <span class="grade-when" id="when-0"></span></button>
+            <button class="grade" data-g="3">Dificil <span class="grade-when" id="when-3"></span></button>
+            <button class="grade" data-g="4">Bien <span class="grade-when" id="when-4"></span></button>
+            <button class="grade" data-g="5">Facil <span class="grade-when" id="when-5"></span></button>
+          </div>
+        </article>
+
+        <aside>
+          <div class="aside-block">
+            <h3 class="t-label" style="margin-bottom:var(--s3)">Cola de hoy</h3>
             <div class="queue" id="queue"></div>
           </div>
-          <div class="card mini">
-            <h3>Cómo funciona</h3>
-            <p class="hint">Repetición espaciada SM-2: cada respuesta ajusta el intervalo. Lo que fallas vuelve enseguida, lo que dominas se espacia días o semanas. Repasa todos los días aunque sean cinco minutos.</p>
+          <div class="aside-block">
+            <h3 class="t-label" style="margin-bottom:var(--s3)">Atajos</h3>
+            <p class="t-hint"><kbd>espacio</kbd> muestra la respuesta y califica Bien.
+              <kbd>1</kbd> a <kbd>4</kbd> califican de Otra vez a Facil.</p>
           </div>
-        </div>
+        </aside>
       </div>
-      <div class="vacio hidden" id="repaso-vacio">
-        <h2>Nada pendiente por ahora</h2>
-        <p>Volviste a poner la cola en cero. Puedes adelantar tarjetas futuras o escribir gotchas de lo que acabas de estudiar.</p>
-        <button class="primary" id="btn-adelantar">Adelantar 10 tarjetas</button>
+
+      <div class="empty hidden" id="repaso-vacio">
+        <h2 class="t-title">La cola quedo en cero</h2>
+        <p class="t-hint">Las tarjetas vuelven solas cuando toca. Si quieres seguir, adelanta las proximas
+          o anota en Gotchas lo que acabas de estudiar.</p>
+        <button class="btn" id="btn-adelantar" style="margin-top:var(--s4)">Adelantar 10 tarjetas</button>
       </div>
     </section>
 
     <!-- GOTCHAS -->
     <section class="view hidden" id="view-gotchas">
-      <header class="view-head">
+      <header class="head">
         <div>
-          <h1>Gotchas</h1>
-          <p class="sub">Trampas y detalles que cuestan caro en el examen o en el laboratorio</p>
+          <h1 class="t-display">Gotchas</h1>
+          <p class="head-sub">Lo que cuesta caro en el examen y en el workspace</p>
         </div>
-        <button class="primary" id="btn-nuevo-gotcha">Nuevo gotcha</button>
+        <button class="btn btn-key" id="btn-nuevo-gotcha">
+          <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-mas"></use></svg> Nuevo gotcha</button>
       </header>
-      <input class="search" id="buscar-gotcha" placeholder="Buscar por texto o etiqueta">
-      <div class="gotchas" id="gotchas"></div>
+      <div class="search-wrap">
+        <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-buscar"></use></svg>
+        <input class="field" id="buscar-gotcha" placeholder="Buscar por texto o etiqueta">
+      </div>
+      <div class="notes" id="notes"></div>
     </section>
 
-    <!-- SNIPPETS -->
+    <!-- CHEATSHEETS -->
     <section class="view hidden" id="view-snippets">
-      <header class="view-head">
+      <header class="head">
         <div>
-          <h1>Cheatsheets</h1>
-          <p class="sub">Snippets listos para pegar en el workspace</p>
+          <h1 class="t-display">Cheatsheets</h1>
+          <p class="head-sub">Snippets listos para pegar en el workspace</p>
         </div>
-        <button class="primary" id="btn-nuevo-snippet">Nuevo snippet</button>
+        <button class="btn btn-key" id="btn-nuevo-snippet">
+          <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-mas"></use></svg> Nuevo snippet</button>
       </header>
-      <input class="search" id="buscar-snippet" placeholder="Buscar por título o código">
-      <div class="snippets" id="snippets"></div>
+      <div class="search-wrap">
+        <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-buscar"></use></svg>
+        <input class="field" id="buscar-snippet" placeholder="Buscar por titulo o codigo">
+      </div>
+      <div class="sheets" id="sheets"></div>
     </section>
 
     <!-- EXAMEN -->
     <section class="view hidden" id="view-examen">
-      <header class="view-head">
+      <header class="head">
         <div>
-          <h1>Simulador de examen</h1>
-          <p class="sub" id="examen-sub">Preguntas con los pesos reales por tema</p>
+          <h1 class="t-display">Simulacro</h1>
+          <p class="head-sub" id="examen-sub"></p>
         </div>
-        <button class="primary" id="btn-examen">Empezar simulacro</button>
+        <button class="btn btn-key" id="btn-examen">Empezar
+          <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-flecha"></use></svg></button>
       </header>
       <div id="examen-body"></div>
     </section>
   </main>
 </div>
 
-<div class="modal hidden" id="modal">
-  <div class="modal-box">
-    <h2 id="modal-tit">Editar</h2>
+<div class="veil hidden" id="veil">
+  <div class="sheet-modal" role="dialog" aria-modal="true" aria-labelledby="modal-tit">
+    <h2 class="t-title" id="modal-tit">Editar</h2>
     <div id="modal-campos"></div>
-    <div class="modal-acciones">
-      <button class="ghost" id="modal-cancelar">Cancelar</button>
-      <button class="primary" id="modal-guardar">Guardar</button>
+    <div class="form-acts">
+      <button class="btn" id="modal-cancelar">Cancelar</button>
+      <button class="btn btn-key" id="modal-guardar">Guardar</button>
     </div>
   </div>
 </div>
 
-<div class="toast hidden" id="toast"></div>
+<div class="notice hidden" id="notice">
+  <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-listo"></use></svg>
+  <span id="notice-txt"></span>
+</div>
 
 <script src="data/seed.js"></script>
 <script src="js/app.js"></script>

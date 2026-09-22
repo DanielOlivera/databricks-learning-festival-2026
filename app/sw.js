@@ -1,6 +1,13 @@
-const CACHE = "study-lab-v1";
-const ASSETS = ["index.html", "css/styles.css", "js/app.js", "data/seed.js",
-                "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png"];
+const CACHE = "study-lab-v2";
+const ASSETS = [
+  "/app/index.html", "/app/js/app.js", "/app/data/seed.js", "/app/manifest.webmanifest",
+  "/ui/tokens.css", "/ui/base.css", "/ui/components.css", "/ui/icons.svg",
+  "/ui/fonts/fonts.css",
+  "/ui/fonts/bricolage-grotesque-600-latin.woff2", "/ui/fonts/bricolage-grotesque-600-latin-ext.woff2",
+  "/ui/fonts/instrument-sans-400-latin.woff2", "/ui/fonts/instrument-sans-400-latin-ext.woff2",
+  "/ui/fonts/jetbrains-mono-400-latin.woff2", "/ui/fonts/jetbrains-mono-400-latin-ext.woff2",
+  "/ui/icons/icon-192.png", "/ui/icons/icon-512.png"
+];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)).then(() => self.skipWaiting()));
@@ -14,6 +21,6 @@ self.addEventListener("fetch", (e) => {
   e.respondWith(
     fetch(e.request)
       .then((r) => { const copia = r.clone(); caches.open(CACHE).then((c) => c.put(e.request, copia)); return r; })
-      .catch(() => caches.match(e.request).then((r) => r || caches.match("index.html")))
+      .catch(() => caches.match(e.request).then((r) => r || caches.match("/app/index.html")))
   );
 });
