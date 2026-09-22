@@ -69,8 +69,9 @@ Databricks Free Edition, Unity Catalog, Delta Lake, Lakeflow Connect, Spark SQL 
 ## App de estudio (PWA local)
 
 `app/` es una aplicacion web que corre solo en la maquina, sin nube ni cuentas, enfocada en
-aprendizaje por repeticion. Se abre con `estudiar.bat` y se puede instalar desde Chrome como
-app de escritorio con su propia ventana e icono.
+aprendizaje por repeticion. Se abre con el acceso directo **Databricks Study Lab** del escritorio
+(`crear-acceso-directo.ps1` lo genera) y se instala como app de escritorio con el boton
+**Instalar como app** de la barra lateral.
 
 - **Panel**: dominio, tarjetas del dia, mapa de constancia, racha y avance por curso
 - **Repaso**: flashcards con repeticion espaciada SM-2, manejables por teclado

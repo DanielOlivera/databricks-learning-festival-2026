@@ -439,6 +439,26 @@ document.addEventListener("keydown", (e) => {
 aplicarTema();
 ir("panel");
 
+/* Instalacion como app de escritorio */
+let promptInstalar = null;
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  promptInstalar = e;
+  $("#btn-instalar").classList.remove("hidden");
+});
+$("#btn-instalar").onclick = async () => {
+  if (!promptInstalar) return;
+  promptInstalar.prompt();
+  const { outcome } = await promptInstalar.userChoice;
+  promptInstalar = null;
+  $("#btn-instalar").classList.add("hidden");
+  toast(outcome === "accepted" ? "Instalada: busca el icono en el escritorio" : "Instalacion cancelada");
+};
+window.addEventListener("appinstalled", () => {
+  $("#btn-instalar").classList.add("hidden");
+  toast("App instalada");
+});
+
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   navigator.serviceWorker.register("sw.js").catch(() => {});
 }

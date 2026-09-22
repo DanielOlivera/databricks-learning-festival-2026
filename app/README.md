@@ -5,17 +5,32 @@ Pensada para aprender por repeticion: lo que fallas vuelve enseguida, lo que dom
 
 ## Como abrirla
 
-Doble clic en `estudiar.bat` (en la raiz del repo). Levanta un servidor local en
-http://localhost:8765 y abre el navegador. Cierra la ventana negra para apagarla.
+Doble clic en **Databricks Study Lab** en el escritorio. El acceso directo ejecuta
+`app/launch.vbs`, que levanta el servidor local oculto (sin ventana negra) y abre la app
+en una ventana de Chrome sin barra de direcciones.
 
-Tambien funciona abriendo `app/index.html` directo con doble clic, pero sin servidor
-no se puede instalar como app ni cachear para uso offline.
+Si mueves el repositorio de carpeta, vuelve a crear el acceso directo:
+
+    powershell -ExecutionPolicy Bypass -File crear-acceso-directo.ps1
+
+Alternativa con consola visible: `estudiar.bat` en la raiz del repo.
 
 ## Instalarla como app de escritorio
 
-Con la app abierta en Chrome: menu de tres puntos, **Enviar, guardar y compartir**,
-**Instalar pagina como aplicacion**. Queda con su propio icono y ventana, como un .exe,
-y se puede anclar a la barra de tareas. Al estar instalada funciona sin conexion.
+Con la app abierta, en la barra lateral aparece el boton **Instalar como app**. Un clic y
+Chrome la instala: icono propio en el escritorio y en el menu inicio, ventana independiente
+y se puede anclar a la barra de tareas. Instalada funciona sin conexion gracias al service
+worker, incluso si el servidor local no esta corriendo.
+
+Tambien se puede instalar desde el menu de tres puntos de Chrome, en **Enviar, guardar y
+compartir**, **Instalar pagina como aplicacion**.
+
+## Por que hay un servidor local
+
+El navegador exige `http://` para service workers, manifest e instalacion como PWA. Con
+`file://` la app abre pero no se instala ni cachea. `server.py` sirve solo en 127.0.0.1,
+sin logs y sin exponer nada a la red. Si el puerto ya esta ocupado, la segunda instancia
+se cierra sola, asi que abrir el acceso directo dos veces no duplica procesos.
 
 ## Modulos
 
