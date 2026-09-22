@@ -145,4 +145,4 @@ display(dbutils.fs.ls(BASE))
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ✅ Setup listo. Sigue con **`01_ctas_read_files`**.
+# MAGIC OK Setup listo. Sigue con **`01_ctas_read_files`**.

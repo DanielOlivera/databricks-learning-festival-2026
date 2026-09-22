@@ -96,5 +96,5 @@ DESCRIBE HISTORY bronze_customers_ctas;
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC ### 🧪 Experimento: ¿el CTAS es incremental?
+-- MAGIC ###  Experimento: ¿el CTAS es incremental?
 -- MAGIC Vuelve a ejecutar la celda del punto 3. El conteo sigue en 10 porque **relee todo** cada vez (batch completo). En `02_copy_into` vas a ver la diferencia con una carga incremental.

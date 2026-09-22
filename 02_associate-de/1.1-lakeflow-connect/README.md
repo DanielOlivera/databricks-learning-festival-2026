@@ -33,7 +33,7 @@ El curso gratuito no trae laboratorio (ese viene con Academy Labs, que es pago),
 ### 3. Orden de estudio de hoy (19:00 a 21:30)
 | Hora | Curso (Academy) | Laboratorio |
 |---|---|---|
-| 19:00 | Lecciones 1-2 (intro), **déjalas en ✅** | — |
+| 19:00 | Lecciones 1-2 (intro), **déjalas en OK** | — |
 | 19:10 | Lección 3 Data Engineering in Databricks + lección 4 Demo | `00_setup` y explorar Catalog |
 | 19:40 | Lección 5 Cloud Storage + lección 6 Demo CTAS/COPY INTO | `01_ctas_read_files`, `02_copy_into` |
 | 20:30 | Lecciones 7-8 Metadata Columns | `03_metadata_columns` |

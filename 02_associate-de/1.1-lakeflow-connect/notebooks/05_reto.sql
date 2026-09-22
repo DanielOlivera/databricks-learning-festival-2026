@@ -1,6 +1,6 @@
 -- Databricks notebook source
 -- MAGIC %md
--- MAGIC # 05 · 🏆 Reto del día 1
+-- MAGIC # 05 · Reto del día 1
 -- MAGIC Resuélvelo sin mirar `soluciones/05_reto_soluciones.sql`. Usa los archivos de `orders_json/` y `products_parquet/`.
 
 -- COMMAND ----------

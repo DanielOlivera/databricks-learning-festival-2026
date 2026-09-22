@@ -79,7 +79,7 @@ SELECT count(*) AS filas FROM bronze_customers_copy;   -- esperado: 13
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC ## 6. ⚠️ `force = true` recarga todo y genera duplicados
+-- MAGIC ## 6. Atencion: `force = true` recarga todo y genera duplicados
 
 -- COMMAND ----------
 
@@ -107,7 +107,7 @@ DESCRIBE HISTORY bronze_customers_copy;
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC ### 🧠 Para recordar
+-- MAGIC ### Clave: Para recordar
 -- MAGIC | | CTAS + `read_files` | `COPY INTO` |
 -- MAGIC |---|---|---|
 -- MAGIC | Tipo | Batch completo | Batch incremental |
@@ -115,4 +115,4 @@ DESCRIBE HISTORY bronze_customers_copy;
 -- MAGIC | Tabla | La crea o la reemplaza | Carga en una tabla existente (puede no tener esquema) |
 -- MAGIC | Escala | Pocos archivos | Miles de archivos (para millones o streaming → Auto Loader) |
 -- MAGIC
--- MAGIC ⚠️ **Si vuelves a ejecutar este notebook:** el paso 1 recrea la tabla, pero el archivo del paso 4 ya queda copiado en `customers_csv/`. Entonces la primera carga traerá 13 filas y el paso 5 cargará 0. Para repetir el ejercicio tal cual, ejecuta `00_setup` otra vez.
+-- MAGIC Atencion: **Si vuelves a ejecutar este notebook:** el paso 1 recrea la tabla, pero el archivo del paso 4 ya queda copiado en `customers_csv/`. Entonces la primera carga traerá 13 filas y el paso 5 cargará 0. Para repetir el ejercicio tal cual, ejecuta `00_setup` otra vez.

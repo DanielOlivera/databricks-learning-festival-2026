@@ -21,7 +21,7 @@
 ## Lecciones 1-2: Introducción (sirven para el registro del festival)
 - **Before we get started:** aviso de que los nombres de producto o de la interfaz pueden haber cambiado. Si ves diferencias, se reportan en help.databricks.com.
 - **Course Logistics Review:** el curso trae lecturas y demos. El laboratorio práctico oficial solo viene con la suscripción paga de **Databricks Academy Labs** (con el festival tienes 20% de descuento). Por eso armamos este laboratorio propio en **Databricks Free Edition**.
-- Estas dos lecciones **tienen que quedar en ✅**, porque la regla del festival exige que cada parte del curso esté completa.
+- Estas dos lecciones **tienen que quedar en OK**, porque la regla del festival exige que cada parte del curso esté completa.
 
 ## Lección 3: Data Engineering in Databricks
 **Objetivos de aprendizaje (tomados del curso):**
@@ -60,9 +60,9 @@ Lakeflow Connect unifica la ingesta desde archivos, bases de datos y aplicacione
 - Tablas **managed** (UC administra los datos) vs **external** (los datos están en una ubicación tuya).
 
 ### Arquitectura Medallion
-- 🥉 **Bronze**: datos crudos tal como llegan, más metadatos de ingesta (archivo de origen, timestamp).
-- 🥈 **Silver**: datos limpios, validados y deduplicados, con tipos correctos.
-- 🥇 **Gold**: agregados listos para negocio y BI.
+- Bronze: **Bronze**: datos crudos tal como llegan, más metadatos de ingesta (archivo de origen, timestamp).
+- Silver: **Silver**: datos limpios, validados y deduplicados, con tipos correctos.
+- Gold: **Gold**: agregados listos para negocio y BI.
 
 Este curso trabaja casi todo en la capa **Bronze**.
 
@@ -70,7 +70,7 @@ Este curso trabaja casi todo en la capa **Bronze**.
 - **Catalog Explorer**: navegar catálogos, schemas, tablas y volúmenes.
 - Subir y listar archivos en un **Volume** (`LIST '/Volumes/…'` o `dbutils.fs.ls`).
 - Cómputo **serverless** para notebooks y SQL.
-- 👉 Para practicarlo: `notebooks/00_setup.py` y explorar lo que crea en Catalog Explorer.
+- Practica: Para practicarlo: `notebooks/00_setup.py` y explorar lo que crea en Catalog Explorer.
 
 ## Lección 5: Data Ingestion from Cloud Storage
 Hay tres formas de leer archivos desde almacenamiento en la nube o Volumes:
@@ -96,7 +96,7 @@ COPY_OPTIONS ('mergeSchema' = 'true');        -- evolución de esquema
 - Sirve para miles de archivos. Para millones, o para streaming, conviene **Auto Loader**.
 
 ## Lección 6: Demo — CTAS y COPY INTO
-👉 `notebooks/01_ctas_read_files.sql` y `notebooks/02_copy_into.sql`.
+Practica: `notebooks/01_ctas_read_files.sql` y `notebooks/02_copy_into.sql`.
 
 ## Lección 7: Appending Metadata Columns on Ingest
 - Todas las fuentes basadas en archivos exponen la columna oculta **`_metadata`** (un struct). Aparece solo si la seleccionas de forma explícita.
@@ -109,7 +109,7 @@ COPY_OPTIONS ('mergeSchema' = 'true');        -- evolución de esquema
 - En `COPY INTO` se usa con una subconsulta: `COPY INTO t FROM (SELECT *, _metadata.file_name AS source_file FROM '/path')`.
 
 ## Lección 8: Demo — Adding Metadata Columns During Ingestion
-👉 `notebooks/03_metadata_columns.sql`.
+Practica: `notebooks/03_metadata_columns.sql`.
 
 ## Lección 9: Working with the Rescued Data Column
 - **`_rescued_data`** es una columna STRING en formato JSON. Guarda lo que **no encaja** con el esquema, en lugar de perderlo o hacer fallar la carga:
