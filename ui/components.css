@@ -53,11 +53,14 @@
 /* ---------- Barra superior ---------- */
 .topbar {
   position: sticky; top: 0; z-index: 20;
-  display: flex; align-items: center; justify-content: flex-end; gap: var(--s4);
-  padding: var(--s4) var(--s10);
+  padding: var(--s4) var(--gutter);
   background: color-mix(in srgb, var(--canvas) 88%, transparent);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--rule-soft);
+}
+.topbar-in {
+  display: flex; align-items: center; gap: var(--s4);
+  width: 100%;
 }
 .racha-inline { display: flex; align-items: center; gap: var(--s2); margin-right: auto;
   font-size: var(--t-meta); color: var(--text-2); }
@@ -85,7 +88,16 @@
 :root:not([data-tema="noche"]) .toggle-tema span:first-child { color: var(--text-inv); }
 :root[data-tema="noche"] .toggle-tema span:last-child { color: var(--text-inv); }
 
-.main { padding: var(--s10) var(--s10) var(--s20); max-width: 1180px; }
+/* El contenido se centra y respira: sin franja muerta en pantallas anchas */
+.main { padding: var(--s10) var(--gutter) var(--s20); width: 100%; }
+.view { width: min(100%, var(--ancho-max)); margin-inline: auto; }
+#view-cursos { --ancho-max: 1520px; }
+#view-curso { --ancho-max: 1100px; }
+#view-cuaderno { --ancho-max: 980px; }
+#view-repaso { --ancho-max: 1280px; }
+#view-gotchas { --ancho-max: 1520px; }
+#view-snippets { --ancho-max: 1100px; }
+#view-examen { --ancho-max: 1000px; }
 
 .head { margin-bottom: var(--s8); }
 .head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s6); }
@@ -161,7 +173,8 @@ select.field { cursor: pointer; }
 .hero-note { margin-top: var(--s4); color: var(--text-2); font-size: var(--t-body-lg); max-width: 52ch; }
 .hero-acts { display: flex; flex-wrap: wrap; gap: var(--s3); margin-top: var(--s6); }
 
-.stats { display: flex; flex-wrap: wrap; gap: var(--s3); margin: var(--s8) 0 var(--s10); }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: var(--s3); margin: var(--s8) 0 var(--s10); }
 .stat {
   flex: 1 1 160px; padding: var(--s5);
   border: 1px solid var(--rule-soft); border-radius: var(--r-lg);
@@ -183,7 +196,7 @@ select.field { cursor: pointer; }
 .ruta-marca[data-ruta="2"] { background: var(--neon-cian); }
 .ruta-cuenta { margin-left: auto; font-size: var(--t-meta); color: var(--text-3); }
 
-.cursos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: var(--s5); }
+.cursos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--s5); }
 .curso-card {
   display: flex; flex-direction: column; gap: var(--s3); text-align: left;
   padding: var(--s6); border: 1px solid var(--rule-soft); border-radius: var(--r-xl);
@@ -235,7 +248,7 @@ select.field { cursor: pointer; }
 /* ---------- Cuaderno ---------- */
 .cuaderno-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s5); margin-bottom: var(--s5); }
 .barra {
-  position: sticky; top: 64px; z-index: 10;
+  position: sticky; top: var(--alto-topbar, 68px); z-index: 10;
   display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1);
   padding: var(--s2); margin-bottom: var(--s4);
   border: 1px solid var(--rule-soft); border-radius: var(--r-pill);
@@ -330,7 +343,7 @@ select.field { cursor: pointer; }
 .empty { padding: var(--s16) 0; max-width: 46ch; }
 
 /* ---------- Gotchas ---------- */
-.notes { columns: 2; column-gap: var(--s5); }
+.notes { columns: 380px auto; column-gap: var(--s5); }
 .note { break-inside: avoid; margin-bottom: var(--s5); padding: var(--s6);
   border: 1px solid var(--rule-soft); border-radius: var(--r-lg); background: var(--surface); }
 .note-head { display: flex; gap: var(--s3); align-items: flex-start; margin-bottom: var(--s3); }
@@ -350,7 +363,8 @@ select.field { cursor: pointer; }
 
 /* ---------- Cheatsheets ---------- */
 .sheets { display: flex; flex-direction: column; gap: var(--s5); }
-.sheet { border: 1px solid var(--rule-soft); border-radius: var(--r-lg); overflow: hidden; background: var(--surface); }
+.sheet { border: 1px solid var(--rule-soft); border-radius: var(--r-lg); overflow: hidden;
+  background: var(--surface); min-width: 0; }
 .sheet-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s4); padding: var(--s4) var(--s5); }
 .sheet-name { font-family: var(--font-display); font-size: var(--t-card); font-weight: 700; text-transform: uppercase; }
 .sheet-lang { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em;
@@ -362,8 +376,8 @@ select.field { cursor: pointer; }
 .quiz { display: flex; flex-direction: column; gap: var(--s6); max-width: 880px; }
 .q { padding: var(--s6); border: 1px solid var(--rule-soft); border-radius: var(--r-lg); background: var(--surface); }
 .q-meta { display: flex; gap: var(--s3); align-items: baseline; margin-bottom: var(--s3); }
-.q-text { font-size: var(--t-body-lg); line-height: 1.5; margin-bottom: var(--s5); max-width: var(--measure); }
-.opts { display: flex; flex-direction: column; gap: var(--s2); max-width: var(--measure); }
+.q-text { font-size: var(--t-body-lg); line-height: 1.5; margin-bottom: var(--s5); }
+.opts { display: flex; flex-direction: column; gap: var(--s2); }
 .opt {
   display: flex; gap: var(--s3); align-items: flex-start; text-align: left;
   padding: var(--s3) var(--s4); border: 2px solid var(--rule-soft); border-radius: var(--r-md);
@@ -379,7 +393,7 @@ select.field { cursor: pointer; }
 .opt[data-estado="mal"] { border-color: var(--danger); background: var(--danger-wash); }
 .opt[data-estado="mal"] .opt-key { background: var(--danger); color: #fff; }
 .why { margin-top: var(--s4); padding: var(--s4); border-radius: var(--r-md);
-  background: var(--sunken); color: var(--text-2); font-size: var(--t-meta); max-width: var(--measure); }
+  background: var(--sunken); color: var(--text-2); font-size: var(--t-meta); }
 .score-line { display: flex; align-items: baseline; gap: var(--s5); margin-bottom: var(--s6); }
 .score-val { font-family: var(--font-mono); font-size: 4rem; font-weight: 500; line-height: 1;
   letter-spacing: -0.04em; color: var(--accion); font-variant-numeric: tabular-nums; }
@@ -423,14 +437,106 @@ textarea.field.mono { font-family: var(--font-mono); font-size: 0.875rem; }
 }
 @media (max-width: 760px) {
   .shell { grid-template-columns: 1fr; }
-  .side { position: static; height: auto; flex-direction: row; flex-wrap: wrap;
-    align-items: center; gap: var(--s3); border-right: 0; border-bottom: 1px solid var(--rule-soft); }
-  .nav { flex-direction: row; flex-wrap: wrap; gap: var(--s1); }
-  .nav-item { padding: var(--s2) var(--s3); }
-  .side-foot { margin: 0; flex-direction: row; }
-  .topbar { padding: var(--s3) var(--s4); }
+  .side {
+    position: sticky; top: 0; z-index: 25; height: auto;
+    flex-direction: row; flex-wrap: wrap; align-items: center; gap: var(--s2);
+    padding: var(--s3) var(--s4);
+    border-right: 0; border-bottom: 1px solid var(--rule-soft);
+  }
+  .mark { padding: 0; margin-right: auto; }
+  .mark-sigil { width: 28px; height: 28px; }
+  .mark-sigil svg { width: 17px; height: 17px; }
+  .mark-name { font-size: 1.05rem; }
+  .mark-sub { display: none; }
+  .nav { flex-direction: row; flex-wrap: wrap; gap: var(--s1); width: 100%; order: 3;
+    overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav-item { width: auto; flex: 0 0 auto; padding: var(--s2) var(--s3); font-size: var(--t-meta); }
+  .side-foot { margin: 0; flex-direction: row; gap: var(--s2); }
+  .side-foot .btn { padding: var(--s2) var(--s3); }
+  .topbar { top: 0; padding: var(--s3) var(--s4); }
   .main { padding: var(--s6) var(--s4) var(--s12); }
   .grades { grid-template-columns: repeat(2, 1fr); }
-  .cursos-grid { grid-template-columns: 1fr; }
+  .cursos-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+  .cuaderno-head { flex-direction: column; gap: var(--s4); }
+  .cuaderno-head .row { width: 100%; }
+  .cuaderno-head .btn { flex: 1; justify-content: center; }
+  .barra { position: static; border-radius: var(--r-lg); }
+  .guardado { width: 100%; padding: var(--s1) var(--s2) 0; text-align: right; }
+  .canvas { padding: var(--s5) var(--s4) var(--s10); font-size: var(--t-body); }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .score-line { flex-direction: column; gap: var(--s3); }
+  .q { padding: var(--s5) var(--s4); }
   .head-row { flex-direction: column; align-items: flex-start; gap: var(--s4); }
+}
+
+/* ============================================================
+   Movimiento. Al estilo de una plataforma de aprendizaje:
+   la entrada de cada pantalla es una sola secuencia corta,
+   las respuestas a un clic son inmediatas y el progreso se
+   dibuja cuando aparece. Nada de rebote.
+   ============================================================ */
+
+/* Entrada de vista: el contenido sube apenas, en cascada corta */
+.view.entra > * {
+  animation: entrada var(--t-slow) var(--ease) both;
+}
+.view.entra > *:nth-child(1) { animation-delay: 0ms; }
+.view.entra > *:nth-child(2) { animation-delay: 45ms; }
+.view.entra > *:nth-child(3) { animation-delay: 90ms; }
+.view.entra > *:nth-child(n+4) { animation-delay: 120ms; }
+@keyframes entrada {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Tarjetas de curso y lecciones: cascada con tope, nunca una por una eterna */
+.curso-card { animation: entrada var(--t-base) var(--ease) both; }
+.cursos-grid .curso-card:nth-child(1) { animation-delay: 30ms; }
+.cursos-grid .curso-card:nth-child(2) { animation-delay: 60ms; }
+.cursos-grid .curso-card:nth-child(3) { animation-delay: 90ms; }
+.cursos-grid .curso-card:nth-child(n+4) { animation-delay: 110ms; }
+.leccion { animation: entrada var(--t-base) var(--ease) both; }
+.leccion:nth-child(1) { animation-delay: 20ms; }
+.leccion:nth-child(2) { animation-delay: 40ms; }
+.leccion:nth-child(3) { animation-delay: 60ms; }
+.leccion:nth-child(n+4) { animation-delay: 75ms; }
+
+/* Progreso: la barra se dibuja al aparecer, no salta a su valor */
+.meter > i { animation: crecer var(--t-slow) var(--ease) both; }
+@keyframes crecer { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.meter > i { transform-origin: left center; }
+
+/* Leccion completada: la palomita entra con un golpe seco, sin rebote */
+.leccion[data-hecha="1"] .leccion-n svg { animation: sello var(--t-base) var(--ease) both; }
+@keyframes sello {
+  from { transform: scale(0.4); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* Respuesta inmediata al clic */
+.curso-card:active { transform: translateY(0) scale(0.995); }
+.leccion:active { background: var(--sunken); }
+.herr:active, .act:active { transform: scale(0.96); }
+
+/* Opcion del simulacro: al acertar, un pulso breve del borde */
+.opt[data-estado="ok"] { animation: acierto 420ms var(--ease) both; }
+@keyframes acierto {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.012); }
+  100% { transform: scale(1); }
+}
+
+/* El contador de la cola late cuando cambia */
+.count { transition: background var(--t-base) var(--ease), color var(--t-base) var(--ease); }
+
+/* Cifras del panel: aparecen contando hacia arriba */
+.stat { animation: entrada var(--t-base) var(--ease) both; }
+.stats .stat:nth-child(2) { animation-delay: 40ms; }
+.stats .stat:nth-child(3) { animation-delay: 80ms; }
+.stats .stat:nth-child(4) { animation-delay: 120ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .view.entra > *, .curso-card, .leccion, .stat, .meter > i,
+  .leccion[data-hecha="1"] .leccion-n svg, .opt[data-estado="ok"] { animation: none !important; }
 }

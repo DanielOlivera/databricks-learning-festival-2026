@@ -38,7 +38,7 @@
   /* --- Texto --- */
   --text:          var(--tinta);
   --text-2:        #55465c;
-  --text-3:        #7d6f82;
+  --text-3:        #645868;   /* 4.7:1 minimo sobre las tres superficies claras */
   --text-inv:      var(--crema);
 
   /* --- Roles --- */
@@ -100,6 +100,8 @@
   /* --- Estructura --- */
   --side-w: 248px;
   --measure: 70ch;
+  --gutter: clamp(1rem, 3.5vw, 3.5rem);   /* margen lateral fluido */
+  --ancho-max: 1280px;                     /* cada vista lo ajusta a su contenido */
 }
 
 /* Tema noche. El violeta de Arc como lienzo, neones sin bajar de

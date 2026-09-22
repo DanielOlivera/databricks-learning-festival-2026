@@ -71,6 +71,23 @@ Tres familias auto-hospedadas en `fonts/`, subconjuntos latin y latin-ext.
 - Toda cifra comparable va en mono con `tabular-nums`.
 - Escala de roles fija, de `--t-hero` a `--t-label`. Medida de lectura de 70ch.
 
+## Ancho y adaptacion
+
+El contenido nunca se queda pegado a la izquierda con una franja muerta al lado. La regla:
+
+- `--gutter: clamp(1rem, 3.5vw, 3.5rem)` da el margen lateral, que crece con la pantalla.
+- Cada vista declara su propio `--ancho-max` segun lo que muestra, y se centra sola:
+  catalogo y gotchas 1520 px (aprovechan el ancho con mas columnas), curso 1100, repaso
+  1280, cheatsheets 1100, simulacro 1000 y cuaderno 980, porque escribir y leer piden una
+  medida corta aunque sobre pantalla.
+- Las rejillas son `auto-fill` con minimo en pixeles, asi que agregan columnas al ensanchar
+  en vez de estirar las tarjetas.
+- La barra superior ocupa todo el ancho y se alinea al mismo margen lateral.
+
+Cortes: 1100 px (el aside del repaso baja, los gotchas pasan a una columna) y 760 px (la
+barra lateral se vuelve una cinta superior con la navegacion desplazable, el cuaderno apila
+su encabezado y la barra de herramientas deja de ser pegajosa).
+
 ## Espacio y forma
 
 - Escala base 4 (`--s1` a `--s16`). Los pasos intermedios importan: un sistema de solo 8
@@ -89,8 +106,21 @@ arriba (`clip-path`), 320 ms, `cubic-bezier(0.16, 1, 0.3, 1)`. Los cuatro botone
 calificacion entran escalonados 40 ms, con tope de 120 ms. Las tarjetas de curso se elevan
 3 px al pasar el cursor; el interruptor de tema desliza su pastilla.
 
+Ademas, el movimiento propio de una plataforma de aprendizaje, siempre ligado a un cambio
+real de estado:
+
+| Momento | Que hace | Tiempo |
+|---|---|---|
+| Entrada de vista | El contenido sube 10 px en cascada de tres pasos | 320 ms, retardos de 0, 45 y 90 ms |
+| Tarjetas y lecciones | Cascada corta con tope a los 110 ms, para que una lista larga no tarde mas que una corta | 200 ms |
+| Barras de progreso | Se dibujan de izquierda a derecha al aparecer | 320 ms |
+| Leccion completada | La palomita entra de golpe, escalando desde 0.4 | 200 ms |
+| Respuesta correcta | Pulso del 1.2% en el borde de la opcion | 420 ms |
+| Clic en cualquier control | Hundido inmediato | 120 ms |
+
 Todo lo demas es retroalimentacion: 120 ms para hover y foco, 200 ms para cambios de estado.
-Nada de rebote ni elastico. Con `prefers-reduced-motion` todo se apaga.
+Nada de rebote ni elastico, y ninguna animacion dura mas de 420 ms. Con
+`prefers-reduced-motion` se apagan todas.
 
 ## Superficies del navegador
 
@@ -126,11 +156,14 @@ Sacados del piso de calidad de Impeccable, con la decision que tomamos en cada c
 
 Antes de dar por cerrado un cambio visual, con la app corriendo:
 
-1. Contraste en ambos temas, incluidos estados deshabilitado y de foco.
+1. Contraste en ambos temas, incluidos estados deshabilitado y de foco. Minimo medido hoy:
+   5.2:1 en el texto terciario, que es el mas debil del sistema.
 2. Prueba de entrecerrar los ojos: se distingue el elemento primario, el secundario y los
    grupos, en ese orden.
 3. Estados reales: vacio, cargando, error, contenido largo, lista de un solo elemento.
-4. Anchos de 1400, 1100, 760 y 430 px. Sin scroll horizontal, sin texto cortado.
+4. Anchos de 1920, 1280, 760 y 430 px. Sin scroll horizontal, sin franja muerta al costado
+   y sin texto cortado. Vale recorrer el arbol midiendo `getBoundingClientRect().right`
+   contra `innerWidth`: encuentra desbordes que a simple vista no se ven.
 5. Teclado completo: foco visible y orden igual al visual.
 6. Movimiento con `prefers-reduced-motion` activado.
 

@@ -174,9 +174,12 @@ function ir(v, opciones = {}) {
   vista = v;
   const raiz = { curso: "cursos", cuaderno: "cursos" }[v] || v;
   $$(".nav-item").forEach(b => b.setAttribute("aria-current", b.dataset.view === raiz ? "page" : "false"));
-  $$(".view").forEach(s => s.classList.add("hidden"));
-  $("#view-" + v).classList.remove("hidden");
+  $$(".view").forEach(s => { s.classList.add("hidden"); s.classList.remove("entra"); });
+  const seccion = $("#view-" + v);
+  seccion.classList.remove("hidden");
   pintores[v](opciones);
+  void seccion.offsetWidth;          // reinicia la animacion de entrada
+  seccion.classList.add("entra");
   window.scrollTo({ top: 0 });
 }
 
