@@ -73,11 +73,13 @@ aprendizaje por repeticion. Se abre con el acceso directo **Databricks Study Lab
 (`crear-acceso-directo.ps1` lo genera) y se instala como app de escritorio con el boton
 **Instalar como app** de la barra lateral.
 
-- **Panel**: dominio, tarjetas del dia, mapa de constancia, racha y avance por curso
+- **Cursos**: catalogo de las tres rutas con progreso, y las lecciones de cada curso
+- **Cuaderno por leccion**: hoja editable con formato, imagenes pegadas o arrastradas y
+  guardado automatico; el texto seleccionado se convierte en flashcard
 - **Repaso**: flashcards con repeticion espaciada SM-2, manejables por teclado
-- **Gotchas**: tablero de trampas con etiquetas, buscador y conversion a tarjeta
+- **Gotchas**: trampas tecnicas de los cursos, con etiquetas y buscador
 - **Cheatsheets**: snippets de SQL y Python con boton de copiar
-- **Examen**: simulacro con los pesos reales por tema y resultado por area
+- **Simulacro**: preguntas con los pesos reales por tema y resultado por area
 
 El material esta en `app/data/seed.js` (versionado). El avance personal queda en el navegador,
 con exportar e importar en JSON. Detalles en [`app/README.md`](app/README.md).

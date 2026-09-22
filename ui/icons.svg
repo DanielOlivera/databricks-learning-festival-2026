@@ -1,6 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
 <!-- Set propio, rejilla 24, trazo 1.6, extremos redondeados.
-     Se usa con <svg class="i"><use href="../ui/icons.svg#nombre"></use></svg> -->
+     Se usa asi: svg.i con un use que apunte a ../ui/icons.svg#ic-nombre -->
+
 
 <symbol id="ic-sigil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
   <path d="M3 7.5 12 3l9 4.5"/><path d="M3 12l9 4.5 9-4.5"/><path d="M3 16.5 12 21l9-4.5"/>
@@ -82,5 +83,74 @@
 
 <symbol id="ic-reloj" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
   <circle cx="12" cy="12" r="8.5"/><path d="M12 7.2V12l3.2 2"/>
+</symbol>
+
+<symbol id="ic-cursos" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10a2.5 2.5 0 0 1 2 1 2.5 2.5 0 0 1 2-1h4.5A1.5 1.5 0 0 1 20 5.5v12a1.5 1.5 0 0 1-1.5 1.5H14a2.5 2.5 0 0 0-2 1 2.5 2.5 0 0 0-2-1H5.5A1.5 1.5 0 0 1 4 17.5z"/><path d="M12 5v14"/>
+</symbol>
+<symbol id="ic-cuaderno" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M7 3.5h11a1.5 1.5 0 0 1 1.5 1.5v14a1.5 1.5 0 0 1-1.5 1.5H7"/><path d="M7 3.5A1.5 1.5 0 0 0 5.5 5v14A1.5 1.5 0 0 0 7 20.5"/>
+  <path d="M4 8h3M4 12h3M4 16h3"/><path d="M10 8h6M10 12h6"/>
+</symbol>
+<symbol id="ic-negrita" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M7 4.5h6a3.75 3.75 0 0 1 0 7.5H7z"/><path d="M7 12h7a3.75 3.75 0 0 1 0 7.5H7z"/>
+</symbol>
+<symbol id="ic-cursiva" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M15 4.5h-5M14 19.5H9M13.5 4.5 10.5 19.5"/>
+</symbol>
+<symbol id="ic-lista" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M9 6.5h11M9 12h11M9 17.5h11"/><path d="M4.5 6.5h.01M4.5 12h.01M4.5 17.5h.01"/>
+</symbol>
+<symbol id="ic-lista-num" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M10 6.5h10M10 12h10M10 17.5h10"/><path d="M4 5.5 5.2 5v3.4M3.8 11.2a1.2 1.2 0 1 1 1.9 1.4L3.8 15h2.4M3.9 16.6a1.1 1.1 0 1 1 1 1.6 1.1 1.1 0 1 1-1 1.6"/>
+</symbol>
+<symbol id="ic-cita" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M9.5 6.5C6.9 7.6 5.5 9.7 5.5 12.8V17.5h5v-5h-3c0-2 .7-3.4 2-4.2z"/><path d="M18.5 6.5c-2.6 1.1-4 3.2-4 6.3v4.7h5v-5h-3c0-2 .7-3.4 2-4.2z"/>
+</symbol>
+<symbol id="ic-imagen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="9.5" r="1.6"/><path d="m4.5 17 4.8-4.4a2 2 0 0 1 2.7 0l3 2.8a2 2 0 0 0 2.7 0l2-1.8"/>
+</symbol>
+<symbol id="ic-titulo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M5.5 5v14M14.5 5v14M5.5 12h9"/><path d="M17 10.5h2.5V19"/>
+</symbol>
+<symbol id="ic-externo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M13.5 4.5h6v6"/><path d="m19.5 4.5-8 8"/><path d="M18 14.5v4a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 18.5v-11A1.5 1.5 0 0 1 5.5 6h4"/>
+</symbol>
+<symbol id="ic-linea" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M4 12h16"/>
+</symbol>
+<symbol id="ic-cursos" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10a2.5 2.5 0 0 1 2 1 2.5 2.5 0 0 1 2-1h4.5A1.5 1.5 0 0 1 20 5.5v12a1.5 1.5 0 0 1-1.5 1.5H14a2.5 2.5 0 0 0-2 1 2.5 2.5 0 0 0-2-1H5.5A1.5 1.5 0 0 1 4 17.5z"/><path d="M12 5v14"/>
+</symbol>
+<symbol id="ic-cuaderno" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M7 3.5h11a1.5 1.5 0 0 1 1.5 1.5v14a1.5 1.5 0 0 1-1.5 1.5H7"/><path d="M7 3.5A1.5 1.5 0 0 0 5.5 5v14A1.5 1.5 0 0 0 7 20.5"/>
+  <path d="M4 8h3M4 12h3M4 16h3"/><path d="M10 8h6M10 12h6"/>
+</symbol>
+<symbol id="ic-negrita" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M7 4.5h6a3.75 3.75 0 0 1 0 7.5H7z"/><path d="M7 12h7a3.75 3.75 0 0 1 0 7.5H7z"/>
+</symbol>
+<symbol id="ic-cursiva" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M15 4.5h-5M14 19.5H9M13.5 4.5 10.5 19.5"/>
+</symbol>
+<symbol id="ic-lista" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M9 6.5h11M9 12h11M9 17.5h11"/><path d="M4.5 6.5h.01M4.5 12h.01M4.5 17.5h.01"/>
+</symbol>
+<symbol id="ic-lista-num" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M10 6.5h10M10 12h10M10 17.5h10"/><path d="M4 5.5 5.2 5v3.4M3.8 11.2a1.2 1.2 0 1 1 1.9 1.4L3.8 15h2.4M3.9 16.6a1.1 1.1 0 1 1 1 1.6 1.1 1.1 0 1 1-1 1.6"/>
+</symbol>
+<symbol id="ic-cita" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M9.5 6.5C6.9 7.6 5.5 9.7 5.5 12.8V17.5h5v-5h-3c0-2 .7-3.4 2-4.2z"/><path d="M18.5 6.5c-2.6 1.1-4 3.2-4 6.3v4.7h5v-5h-3c0-2 .7-3.4 2-4.2z"/>
+</symbol>
+<symbol id="ic-imagen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="9.5" r="1.6"/><path d="m4.5 17 4.8-4.4a2 2 0 0 1 2.7 0l3 2.8a2 2 0 0 0 2.7 0l2-1.8"/>
+</symbol>
+<symbol id="ic-titulo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M5.5 5v14M14.5 5v14M5.5 12h9"/><path d="M17 10.5h2.5V19"/>
+</symbol>
+<symbol id="ic-externo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M13.5 4.5h6v6"/><path d="m19.5 4.5-8 8"/><path d="M18 14.5v4a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 18.5v-11A1.5 1.5 0 0 1 5.5 6h4"/>
+</symbol>
+<symbol id="ic-linea" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M4 12h16"/>
 </symbol>
 </svg>

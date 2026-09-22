@@ -45,11 +45,27 @@ Por eso la direccion es `http://localhost:8765/app/index.html`.
 
 | Modulo | Que hace |
 |---|---|
-| Panel | Dominio general, tarjetas para hoy, mapa de constancia de 8 semanas, racha, avance por tema y por curso |
+| Cursos | Catalogo de las tres rutas con progreso por curso. Entrar a un curso lista sus lecciones |
+| Leccion | Cuaderno propio por leccion: texto con formato, imagenes pegadas o arrastradas, codigo y citas. Guarda solo. Tambien marca la leccion como vista y abre la leccion real en la Academy |
 | Repaso | Flashcards con algoritmo SM-2. Teclado: espacio muestra la respuesta, teclas 1 a 4 califican |
-| Gotchas | Tablero de trampas con etiquetas y buscador. Cualquier gotcha se convierte en tarjeta con un clic |
+| Gotchas | Trampas tecnicas de los cursos, con etiquetas y buscador. Cualquiera se convierte en tarjeta |
 | Cheatsheets | Snippets de SQL y Python con boton de copiar |
-| Examen | Simulacro con los pesos reales del examen y resultado por tema |
+| Simulacro | Preguntas con los pesos reales del examen y resultado por tema |
+
+Solo entra contenido de los cursos. Lo administrativo del festival (inscripciones, cuentas,
+voucher, fechas) vive en `01_plan/plan-estudio.md`.
+
+## Cuadernos
+
+Cada leccion tiene su cuaderno. Se escribe directo en la hoja; la barra de arriba da titulo,
+subtitulo, parrafo, listas, cita, bloque de codigo, imagen y separador. Las imagenes se
+pegan con Ctrl+V o se arrastran, y se reducen a 1400 px antes de guardarse.
+
+Con texto seleccionado, el boton **A tarjeta** crea una flashcard con esa respuesta: lo que
+anotas entra al ciclo de repeticion sin pasos extra.
+
+Los cuadernos se guardan en IndexedDB, no en localStorage, para que las imagenes no llenen
+el cupo. El respaldo de **Exportar** los incluye.
 
 ## Como funciona la repeticion espaciada
 
@@ -67,7 +83,8 @@ porcentaje de Dominio del panel.
 
 - **Material de estudio**: `data/seed.js`. Es texto plano y versionado en git.
   Para agregar tarjetas, gotchas, snippets o preguntas, se edita ese archivo.
-- **Tu avance** (repeticiones, fechas, racha, notas propias): `localStorage` del navegador.
+- **Tu avance** (repeticiones, lecciones vistas, racha, gotchas propios): `localStorage`.
+- **Tus cuadernos** (texto e imagenes): IndexedDB del navegador.
   No se sube a ningun lado. Usa **Exportar datos** para bajar un JSON de respaldo e
   **Importar datos** para restaurarlo en otra maquina o navegador.
 

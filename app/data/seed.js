@@ -2,20 +2,35 @@
 // El avance personal (repeticiones, fechas, notas propias) vive en el navegador,
 // separado de este archivo.
 window.SEED = {
-  version: 3,
+  version: 4,
   cursos: [
-    { id: "1.1", ruta: "Associate DE", nombre: "Data Ingestion with Lakeflow Connect", lecciones: 14 },
-    { id: "1.2", ruta: "Associate DE", nombre: "Deploy Workloads with Lakeflow Jobs", lecciones: 12 },
-    { id: "1.3", ruta: "Associate DE", nombre: "Build Data Pipelines with SDP", lecciones: 15 },
-    { id: "1.4", ruta: "Associate DE", nombre: "DevOps Essentials for Data Engineering", lecciones: 18 },
-    { id: "2.1", ruta: "GenAI", nombre: "Building RAG Agents with Agent Bricks", lecciones: 10 },
-    { id: "2.2", ruta: "GenAI", nombre: "Building Agentic Applications", lecciones: 10 },
-    { id: "2.3", ruta: "GenAI", nombre: "Agent Evaluation on Databricks", lecciones: 14 },
-    { id: "2.4", ruta: "GenAI", nombre: "Deploying and Monitoring Agent Apps", lecciones: 9 },
-    { id: "3.1", ruta: "Professional DE", nombre: "Advanced Techniques with SDP", lecciones: 15 },
-    { id: "3.2", ruta: "Professional DE", nombre: "Databricks Data Privacy", lecciones: 22 },
-    { id: "3.3", ruta: "Professional DE", nombre: "Databricks Performance Optimization", lecciones: 19 },
-    { id: "3.4", ruta: "Professional DE", nombre: "Declarative Automation Bundles", lecciones: 17 }
+    { id: "1.1", ruta: "Associate DE", nombre: "Data Ingestion with Lakeflow Connect", lecciones: 14, url: "https://customer-academy.databricks.com/learn/courses/2963/data-ingestion-with-lakeflow-connect", temario: [
+      {"n": 1, "titulo": "Before we get started", "tipo": "Slides", "url": "https://customer-academy.databricks.com/learn/courses/2963/data-ingestion-with-lakeflow-connect/lessons/39065/before-we-get-started"},
+      {"n": 2, "titulo": "Course Logistics Review", "tipo": "HTML", "url": "https://customer-academy.databricks.com/learn/courses/2963/data-ingestion-with-lakeflow-connect/lessons/25554/course-logistics-review"},
+      {"n": 3, "titulo": "Data Engineering in Databricks", "tipo": "Lectura", "url": "https://customer-academy.databricks.com/learn/courses/2963/data-ingestion-with-lakeflow-connect/lessons/62746:4036/data-engineering-in-databricks"},
+      {"n": 4, "titulo": "Demo: Exploring the Lab Environment", "tipo": "Video", "url": "https://customer-academy.databricks.com/learn/courses/2963/data-ingestion-with-lakeflow-connect/lessons/62770/demo-exploring-the-lab-environment"},
+      {"n": 5, "titulo": "Data Ingestion from Cloud Storage", "tipo": "Lectura", "url": "https://customer-academy.databricks.com/learn/courses/2963/data-ingestion-with-lakeflow-connect/lessons/62749:3619/data-ingestion-from-cloud-storage"},
+      {"n": 6, "titulo": "Appending Metadata Columns on Ingest", "tipo": "Lectura", "url": "https://customer-academy.databricks.com/learn/courses/2963/data-ingestion-with-lakeflow-connect/lessons/62751:3350/appending-metadata-columns-on-ingest"},
+      {"n": 7, "titulo": "Working with the Rescued Data Column", "tipo": "Lectura", "url": "https://customer-academy.databricks.com/learn/courses/2963/data-ingestion-with-lakeflow-connect/lessons/62752:3351/working-with-the-rescued-data-column"},
+      {"n": 8, "titulo": "Ingesting Semi-Structured Data JSON", "tipo": "Lectura", "url": "https://customer-academy.databricks.com/learn/courses/2963/data-ingestion-with-lakeflow-connect/lessons/62754:3352/ingesting-semi-structured-data-json"},
+      {"n": 9, "titulo": "Demo: Ingesting JSON Files", "tipo": "Video", "url": "https://customer-academy.databricks.com/learn/courses/2963/data-ingestion-with-lakeflow-connect/lessons/40801/demo-ingesting-json-files-with-databricks"},
+      {"n": 10, "titulo": "Ingesting Enterprise Data Overview", "tipo": "Lectura", "url": "https://customer-academy.databricks.com/learn/courses/2963/data-ingestion-with-lakeflow-connect/lessons/62756:3353/ingesting-enterprise-data-overview"},
+      {"n": 11, "titulo": "Demo: Enterprise Data Ingestion with Lakeflow Connect", "tipo": "Video", "url": "https://customer-academy.databricks.com/learn/courses/2963/data-ingestion-with-lakeflow-connect/lessons/40803/demo-enterprise-data-ingestion-with-lakeflow-connect"},
+      {"n": 12, "titulo": "Additional Features and Ingesting into Existing UC tables", "tipo": "Lectura", "url": "https://customer-academy.databricks.com/learn/courses/2963/data-ingestion-with-lakeflow-connect/lessons/62757:3354/additional-features-and-ingesting-into-existing-uc-tables"},
+      {"n": 13, "titulo": "Course Summary and Next Steps", "tipo": "HTML", "url": "https://customer-academy.databricks.com/learn/courses/2963/data-ingestion-with-lakeflow-connect/lessons/25555/course-summary-and-next-steps"},
+      {"n": 14, "titulo": "Quiz - Data Ingestion with Lakeflow Connect", "tipo": "Quiz", "url": "https://customer-academy.databricks.com/learn/courses/2963/data-ingestion-with-lakeflow-connect/lessons/49531/quiz-data-ingestion-with-lakeflow-connect"}
+    ] },
+    { id: "1.2", ruta: "Associate DE", nombre: "Deploy Workloads with Lakeflow Jobs", lecciones: 12, url: "https://customer-academy.databricks.com/learn/courses/1365/deploy-workloads-with-lakeflow-jobs", temario: [] },
+    { id: "1.3", ruta: "Associate DE", nombre: "Build Data Pipelines with Spark Declarative Pipelines", lecciones: 15, url: "https://customer-academy.databricks.com/learn/courses/2971/build-data-pipelines-with-apache-spark-declarative-pipelines", temario: [] },
+    { id: "1.4", ruta: "Associate DE", nombre: "DevOps Essentials for Data Engineering", lecciones: 18, url: "https://customer-academy.databricks.com/learn/courses/3640/devops-essentials-for-data-engineering", temario: [] },
+    { id: "2.1", ruta: "GenAI", nombre: "Building RAG Agents with Agent Bricks", lecciones: 10, url: "https://customer-academy.databricks.com/learn/courses/5857/building-rag-agents-with-agent-bricks", temario: [] },
+    { id: "2.2", ruta: "GenAI", nombre: "Building Agentic Applications", lecciones: 10, url: "https://customer-academy.databricks.com/learn/courses/5856/building-agentic-applications-on-databricks", temario: [] },
+    { id: "2.3", ruta: "GenAI", nombre: "Agent Evaluation on Databricks", lecciones: 14, url: "https://customer-academy.databricks.com/learn/courses/5062/agent-evaluation-on-databricks", temario: [] },
+    { id: "2.4", ruta: "GenAI", nombre: "Deploying and Monitoring Agent Apps", lecciones: 9, url: "https://customer-academy.databricks.com/learn/courses/5855/deploying-and-monitoring-agent-applications-on-databricks", temario: [] },
+    { id: "3.1", ruta: "Professional DE", nombre: "Advanced Techniques with SDP", lecciones: 15, url: "https://customer-academy.databricks.com/learn/courses/2972/advanced-techniques-with-apache-spark-declarative-pipelines", temario: [] },
+    { id: "3.2", ruta: "Professional DE", nombre: "Databricks Data Privacy", lecciones: 22, url: "https://customer-academy.databricks.com/learn/courses/3767/databricks-data-privacy", temario: [] },
+    { id: "3.3", ruta: "Professional DE", nombre: "Databricks Performance Optimization", lecciones: 19, url: "https://customer-academy.databricks.com/learn/courses/2967/databricks-performance-optimization", temario: [] },
+    { id: "3.4", ruta: "Professional DE", nombre: "Declarative Automation Bundles", lecciones: 17, url: "https://customer-academy.databricks.com/learn/courses/3489/automated-deployment-with-declarative-automation-bundles", temario: [] }
   ],
 
   tarjetas: [
@@ -47,15 +62,14 @@ window.SEED = {
   ],
 
   gotchas: [
-    { id: "g01", curso: "1.1", titulo: "La búsqueda muestra primero la versión de $750", texto: "Cada curso existe como E-learning gratis y como Instructor-led de 4 h a 750 USD, con el mismo nombre. En el catálogo aparece primero el pago. Usa siempre los enlaces de la página del festival.", tags: ["festival", "inscripcion"] },
-    { id: "g02", curso: "1.1", titulo: "Abrir una lección la marca como completada", texto: "En la Academy, entrar a una lección de tipo Slides, HTML o SCORM la marca como Completed al instante. Navegar con Next lesson sin cargar el contenido solo la deja In progress.", tags: ["academy"] },
-    { id: "g03", curso: "1.1", titulo: "El curso tiene 14 lecciones, no 16 ni 19", texto: "La vista de catálogo mezcla variantes por idioma y versiones viejas. El número real es el del reproductor: 14 lecciones para Data Ingestion with Lakeflow Connect.", tags: ["academy"] },
     { id: "g04", curso: "1.1", titulo: "CTAS no es incremental", texto: "Volver a ejecutar un CREATE OR REPLACE TABLE AS SELECT relee todos los archivos. No duplica filas porque reemplaza la tabla, pero el costo crece con cada archivo de la carpeta.", tags: ["ingesta", "examen"] },
     { id: "g05", curso: "1.1", titulo: "force = true sí duplica", texto: "COPY INTO es idempotente, salvo que uses force. Con force recarga archivos ya procesados y las filas quedan repetidas en la tabla.", tags: ["ingesta", "examen"] },
     { id: "g06", curso: "1.1", titulo: "_metadata no sale con SELECT *", texto: "Es una columna oculta: solo aparece si la nombras de forma explícita en el SELECT.", tags: ["metadatos", "examen"] },
-    { id: "g07", curso: "1.1", titulo: "Un solo voucher por persona", texto: "Aunque completes las tres rutas, el festival entrega un único voucher del 50%. Los demás exámenes cuestan 200 USD.", tags: ["festival"] },
-    { id: "g08", curso: "1.1", titulo: "Free Edition usa el catálogo workspace", texto: "En Databricks Free Edition el catálogo por defecto es workspace. Ahí creas el schema y el volumen del laboratorio.", tags: ["lab"] },
-    { id: "g09", curso: "1.1", titulo: "El mismo correo en Academy y Webassessor", texto: "El voucher se genera por correo. Si las cuentas tienen correos distintos, hay que agregar el de la Academy como correo secundario en Webassessor.", tags: ["festival", "examen"] }
+    { id: "g08", curso: "1.1", titulo: "Free Edition usa el catalogo workspace", texto: "En Databricks Free Edition el catalogo por defecto es workspace. Ahi creas el schema y el volumen del laboratorio.", tags: ["lab"] },
+    { id: "g10", curso: "1.1", titulo: "read_files infiere el tipo del peor dato", texto: "Un solo valor sucio en una columna numerica hace que todo se infiera como STRING. Declara schema o schemaHints cuando el tipo importa.", tags: ["ingesta", "examen"] },
+    { id: "g11", curso: "1.1", titulo: "El esquema explicito activa la cuarentena, no la perdida", texto: "Con schema y rescuedDataColumn, el valor invalido queda NULL en su columna y se conserva dentro de _rescued_data junto con _file_path.", tags: ["rescued data"] },
+    { id: "g12", curso: "1.1", titulo: "COPY INTO acepta una tabla sin esquema", texto: "CREATE TABLE t; y luego COPY INTO con mergeSchema en true infiere el esquema en la primera carga. Util para bronze.", tags: ["ingesta"] },
+    { id: "g13", curso: "1.1", titulo: "Auto Loader entra cuando COPY INTO ya no da", texto: "COPY INTO escala hasta miles de archivos. Con millones, o cuando hace falta baja latencia, el camino es Auto Loader con cloudFiles.", tags: ["ingesta", "examen"] },
   ],
 
   snippets: [

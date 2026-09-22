@@ -1,114 +1,139 @@
 /* ============================================================
-   Tokens. Unica fuente de valores: ningun componente inventa
-   colores, tamanos ni tiempos fuera de este archivo.
-   Espacio de color OKLCH: lightness y chroma se ajustan de forma
-   predecible al derivar estados.
+   Tokens. Unica fuente de valores.
+
+   Paleta tomada de arcraiders.com: crema, tinta violeta casi
+   negra, dorado para la accion y neones planos (rojo, amarillo,
+   verde, cian) como codigo de categoria.
+   Estructura y generosidad de espacio al estilo brilliant.org.
+
+   El tema claro es el de entrada; el oscuro esta compuesto
+   aparte, no invertido.
    ============================================================ */
 
 :root {
-  /* --- Superficies. Tema noche, el escenario real de uso --- */
-  --canvas:        oklch(0.175 0.013 52);   /* fondo de la ventana */
-  --sunken:        oklch(0.152 0.012 52);   /* zonas hundidas: codigo, listas */
-  --surface:       oklch(0.222 0.014 52);   /* paneles */
-  --surface-raise: oklch(0.262 0.016 52);   /* controles sobre panel */
-  --rule:          oklch(0.318 0.016 52);   /* hairline visible */
-  --rule-soft:     oklch(0.258 0.013 52);   /* hairline de separacion interna */
+  /* --- Crudos de marca --- */
+  --crema:      #ece2d0;
+  --crema-alta: #f6f0e4;
+  --tinta:      #130918;
+  --tinta-suave:#251a2c;
+  --dorado:     #f1aa1c;
+  --dorado-alto:#ffc34d;
 
-  /* --- Texto. Tintado desde el mismo hue calido, nunca gris puro --- */
-  --text:          oklch(0.955 0.008 75);
-  --text-2:        oklch(0.775 0.018 70);
-  --text-3:        oklch(0.638 0.021 68);
+  /* Neones planos. Codigo de categoria, nunca decoracion suelta. */
+  --neon-rojo:  #e8271f;
+  --neon-ambar: #f2b01e;
+  --neon-verde: #2fb84f;
+  --neon-cian:  #3fbcdf;
+  --neon-azul:  #2f4bc7;
 
-  /* --- Roles de color ---
-     ember: accion, marca y foco de atencion. Escaso por diseno.
-     signal: medicion y datos. Nunca compite con ember por la accion. */
-  --ember:         oklch(0.685 0.185 38);
-  --ember-hi:      oklch(0.745 0.175 40);
-  --ember-dim:     oklch(0.435 0.105 38);
-  --ember-wash:    oklch(0.30 0.055 38);
-  --signal:        oklch(0.815 0.115 205);
-  --signal-dim:    oklch(0.45 0.07 205);
+  /* --- Superficies (tema claro) --- */
+  --canvas:        var(--crema);
+  --sunken:        #e2d7c2;
+  --surface:       var(--crema-alta);
+  --surface-raise: #ffffff;
+  --contraste:     var(--tinta);          /* bloques que contrastan con el papel */
+  --rule:          #cdbfa6;
+  --rule-soft:     #ded2bb;
 
-  /* --- Semanticos. Siempre acompanados de texto o forma --- */
-  --ok:            oklch(0.795 0.145 158);
-  --ok-dim:        oklch(0.42 0.08 158);
-  --warn:          oklch(0.835 0.135 85);
-  --warn-dim:      oklch(0.45 0.08 85);
-  --danger:        oklch(0.705 0.165 18);
-  --danger-dim:    oklch(0.40 0.09 18);
+  /* --- Texto --- */
+  --text:          var(--tinta);
+  --text-2:        #55465c;
+  --text-3:        #7d6f82;
+  --text-inv:      var(--crema);
+
+  /* --- Roles --- */
+  --accion:        var(--dorado);         /* botones principales */
+  --accion-alta:   var(--dorado-alto);
+  --accion-txt:    var(--tinta);
+  --foco:          var(--neon-azul);
+  --ok:            var(--neon-verde);
+  --warn:          var(--neon-ambar);
+  --danger:        var(--neon-rojo);
+  --dato:          var(--neon-cian);
+
+  /* Tintes suaves para fondos de estado, sobre papel */
+  --ok-wash:      #dcf0e0;
+  --warn-wash:    #fbeec9;
+  --danger-wash:  #fadedd;
+  --dato-wash:    #d9eef6;
+  --accion-wash:  #fbe9c4;
 
   /* --- Tipografia --- */
-  --font-display: 'Bricolage Grotesque', 'Segoe UI', sans-serif;
-  --font-text:    'Instrument Sans', 'Segoe UI', sans-serif;
+  --font-display: 'Barlow Condensed', 'Barlow', 'Segoe UI', sans-serif;
+  --font-text:    'Barlow', 'Segoe UI', sans-serif;
   --font-mono:    'JetBrains Mono', ui-monospace, Consolas, monospace;
 
-  --t-display:    clamp(1.75rem, 1.1rem + 1.8vw, 2.5rem);
-  --t-title:      1.25rem;
-  --t-question:   clamp(1.25rem, 0.95rem + 1vw, 1.625rem);
-  --t-body-lg:    1.0625rem;
-  --t-body:       0.9375rem;
-  --t-meta:       0.8125rem;
-  --t-label:      0.6875rem;
+  --t-hero:     clamp(2.5rem, 1.6rem + 3.4vw, 4.25rem);
+  --t-display:  clamp(1.9rem, 1.4rem + 1.8vw, 2.75rem);
+  --t-title:    1.375rem;
+  --t-card:     1.0625rem;
+  --t-body-lg:  1.125rem;
+  --t-body:     1rem;
+  --t-meta:     0.875rem;
+  --t-label:    0.75rem;
 
-  --lh-tight:     1.1;
-  --lh-snug:      1.35;
-  --lh-body:      1.6;
-  --track-display: -0.03em;
-  --track-title:  -0.02em;
-  --track-label:  0.09em;
+  --lh-tight:   0.98;
+  --lh-snug:    1.25;
+  --lh-body:    1.6;
+  --track-hero: -0.01em;
+  --track-label: 0.12em;
 
-  /* --- Espacio. Base 4, con los pasos intermedios que un 8 puro pierde --- */
+  /* --- Espacio: base 4, generoso al estilo plataforma educativa --- */
   --s1: 0.25rem;  --s2: 0.5rem;   --s3: 0.75rem;  --s4: 1rem;
   --s5: 1.25rem;  --s6: 1.5rem;   --s8: 2rem;     --s10: 2.5rem;
-  --s12: 3rem;    --s16: 4rem;
+  --s12: 3rem;    --s16: 4rem;    --s20: 5rem;
 
-  /* --- Forma --- */
-  --r-sm: 6px;  --r-md: 10px;  --r-lg: 14px;  --r-xl: 20px;  --r-pill: 999px;
+  /* --- Forma: esquinas amplias --- */
+  --r-sm: 8px;  --r-md: 14px;  --r-lg: 20px;  --r-xl: 28px;  --r-pill: 999px;
 
-  /* --- Profundidad. Siempre offset mas blur suave, nunca halo plano --- */
-  --e1: 0 1px 2px oklch(0.10 0.01 52 / 0.5), 0 3px 10px -4px oklch(0.10 0.01 52 / 0.45);
-  --e2: 0 2px 4px oklch(0.10 0.01 52 / 0.45), 0 16px 32px -12px oklch(0.08 0.01 52 / 0.6);
+  /* --- Profundidad: sombra tintada del papel, con offset y blur --- */
+  --e1: 0 1px 2px rgba(19, 9, 24, 0.06), 0 4px 12px -4px rgba(19, 9, 24, 0.10);
+  --e2: 0 2px 4px rgba(19, 9, 24, 0.07), 0 18px 36px -14px rgba(19, 9, 24, 0.22);
+  --borde-solido: 2px solid var(--tinta);
 
-  /* --- Movimiento. Desaceleracion natural, nunca rebote --- */
+  /* --- Movimiento --- */
   --t-fast: 120ms;
   --t-base: 200ms;
   --t-slow: 320ms;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 
   /* --- Estructura --- */
-  --side-w: 236px;
-  --measure: 68ch;
+  --side-w: 248px;
+  --measure: 70ch;
 }
 
-/* Tema dia. Compuesto aparte, no es una inversion del tema noche:
-   el papel es calido, las reglas mas suaves y el ember baja de
-   lightness para no vibrar sobre fondo claro. */
-:root[data-tema="dia"] {
-  --canvas:        oklch(0.975 0.008 85);
-  --sunken:        oklch(0.945 0.010 85);
-  --surface:       oklch(0.995 0.004 85);
-  --surface-raise: oklch(0.962 0.008 85);
-  --rule:          oklch(0.885 0.012 78);
-  --rule-soft:     oklch(0.925 0.010 80);
+/* Tema noche. El violeta de Arc como lienzo, neones sin bajar de
+   saturacion y el dorado apenas mas claro para sostener contraste. */
+:root[data-tema="noche"] {
+  --canvas:        var(--tinta);
+  --sunken:        #0d0511;
+  --surface:       #1d1024;
+  --surface-raise: #2a1a33;
+  --contraste:     var(--crema);
+  --rule:          #3c2a47;
+  --rule-soft:     #2c1d36;
 
-  --text:          oklch(0.235 0.020 55);
-  --text-2:        oklch(0.455 0.022 60);
-  --text-3:        oklch(0.585 0.020 62);
+  --text:          var(--crema);
+  --text-2:        #b6a9ae;
+  --text-3:        #8d7f95;
+  --text-inv:      var(--tinta);
 
-  --ember:         oklch(0.585 0.185 35);
-  --ember-hi:      oklch(0.525 0.185 33);
-  --ember-dim:     oklch(0.86 0.055 45);
-  --ember-wash:    oklch(0.945 0.028 50);
-  --signal:        oklch(0.545 0.115 218);
-  --signal-dim:    oklch(0.90 0.045 210);
+  --accion:        var(--dorado);
+  --accion-alta:   var(--dorado-alto);
+  --accion-txt:    var(--tinta);
+  --foco:          #6f8cff;
+  --ok:            #4ad46c;
+  --warn:          #ffc73f;
+  --danger:        #ff5449;
+  --dato:          #5fd2f2;
 
-  --ok:            oklch(0.545 0.125 158);
-  --ok-dim:        oklch(0.90 0.055 158);
-  --warn:          oklch(0.635 0.125 72);
-  --warn-dim:      oklch(0.92 0.055 85);
-  --danger:        oklch(0.545 0.175 22);
-  --danger-dim:    oklch(0.92 0.045 22);
+  --ok-wash:      #16301f;
+  --warn-wash:    #35280c;
+  --danger-wash:  #3a1613;
+  --dato-wash:    #12303a;
+  --accion-wash:  #3a2a0d;
 
-  --e1: 0 1px 2px oklch(0.45 0.03 60 / 0.10), 0 3px 10px -4px oklch(0.45 0.03 60 / 0.12);
-  --e2: 0 2px 4px oklch(0.45 0.03 60 / 0.10), 0 16px 32px -12px oklch(0.45 0.03 60 / 0.18);
+  --e1: 0 1px 2px rgba(0, 0, 0, 0.5), 0 4px 14px -4px rgba(0, 0, 0, 0.55);
+  --e2: 0 2px 4px rgba(0, 0, 0, 0.5), 0 20px 40px -16px rgba(0, 0, 0, 0.7);
+  --borde-solido: 2px solid var(--rule);
 }

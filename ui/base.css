@@ -23,19 +23,26 @@ body {
 }
 
 /* --- Roles tipograficos --- */
-h1, h2, h3, h4 { margin: 0; font-family: var(--font-display); font-weight: 600; }
+h1, h2, h3, h4 { margin: 0; font-family: var(--font-display); font-weight: 700; }
 
-.t-display {
-  font-size: var(--t-display);
-  line-height: var(--lh-tight);
-  letter-spacing: var(--track-display);
+/* Display condensado en mayusculas: la voz de arcraiders */
+.t-hero, .t-display {
+  font-family: var(--font-display);
   font-weight: 700;
+  text-transform: uppercase;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--track-hero);
   text-wrap: balance;
 }
+.t-hero { font-size: var(--t-hero); }
+.t-display { font-size: var(--t-display); }
 .t-title {
+  font-family: var(--font-display);
   font-size: var(--t-title);
+  font-weight: 700;
+  text-transform: uppercase;
   line-height: var(--lh-snug);
-  letter-spacing: var(--track-title);
+  letter-spacing: 0.01em;
   text-wrap: balance;
 }
 .t-label {
@@ -56,14 +63,14 @@ h1, h2, h3, h4 { margin: 0; font-family: var(--font-display); font-weight: 600; 
 }
 
 p { margin: 0 0 var(--s3); max-width: var(--measure); }
-a { color: var(--ember); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+a { color: inherit; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 
 code, pre { font-family: var(--font-mono); }
 
 /* --- Superficies del navegador --- */
-::selection { background: var(--ember-wash); color: var(--text); }
-:root { accent-color: var(--ember); caret-color: var(--ember); color-scheme: dark; }
-:root[data-tema="dia"] { color-scheme: light; }
+::selection { background: var(--accion-wash); color: var(--text); }
+:root { accent-color: var(--accion); caret-color: var(--accion); color-scheme: light; }
+:root[data-tema="noche"] { color-scheme: dark; }
 
 * { scrollbar-width: thin; scrollbar-color: var(--rule) transparent; }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
@@ -76,7 +83,7 @@ code, pre { font-family: var(--font-mono); }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
 
 :focus-visible {
-  outline: 2px solid var(--signal);
+  outline: 2px solid var(--foco);
   outline-offset: 2px;
   border-radius: var(--r-sm);
 }

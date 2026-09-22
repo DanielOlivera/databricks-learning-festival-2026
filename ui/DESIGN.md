@@ -3,10 +3,17 @@
 Este documento manda sobre la apariencia de la app. Si un archivo de `app/` contradice
 lo que dice aqui, el que esta mal es el archivo de `app/`.
 
-La guia de fondo es [Impeccable](https://github.com/pbakaus/impeccable) (Apache-2.0), un
-lenguaje de diseno para agentes. De ahi salen el piso de calidad, la lista de patrones
-prohibidos y el criterio de verificacion. Las decisiones concretas de abajo son de este
-producto, no de la guia.
+Dos referencias visuales, ambas pedidas por el usuario:
+
+- **[arcraiders.com](https://arcraiders.com/es)**: la paleta y la voz tipografica. Crema,
+  tinta violeta casi negra, dorado para la accion, neones planos y Barlow condensada en
+  mayusculas para los titulares.
+- **[brilliant.org](https://brilliant.org)**: la estructura de plataforma educativa.
+  Catalogo de cursos en tarjetas amplias, esquinas muy redondeadas, progreso siempre a la
+  vista, tema claro por defecto.
+
+El metodo de trabajo y el piso de calidad vienen de
+[Impeccable](https://github.com/pbakaus/impeccable) (Apache-2.0).
 
 ## Modo y escena
 
@@ -14,51 +21,55 @@ producto, no de la guia.
 escaneabilidad, la densidad estable y la consistencia. La marca vive en los detalles finos,
 no en efectos.
 
-**Escena de uso**: de 19:00 a 22:00, en casa, solo, con luz baja, sobre una laptop, durante
-un sprint de 22 dias. De ahi sale el tema noche por defecto, con negros calidos en vez del
-azul oscuro tipico de dashboards. El tema dia existe compuesto aparte, no invertido.
+**Escena de uso**: de 19:00 a 22:00, en casa, sobre una laptop, durante un sprint de 22
+dias. **El tema claro es el de entrada**, sobre papel crema en vez de blanco. El tema noche
+usa el violeta casi negro de Arc y esta compuesto aparte, no invertido.
+
+El interruptor de tema es un sol y una luna, arriba a la derecha, en la barra superior:
+donde lo busca cualquiera.
 
 ## Color
 
-Definido en OKLCH, en `tokens.css`. Roles, no swatches sueltos:
+Definido en `tokens.css`. Crudos de marca tomados de Arc Raiders:
 
-| Rol | Token | Uso |
+| Crudo | Valor | Donde |
 |---|---|---|
-| Lienzo | `--canvas` | fondo de ventana |
-| Hundido | `--sunken` | barra lateral, bloques de codigo |
-| Panel | `--surface` | tarjetas y paneles |
-| Relieve | `--surface-raise` | controles sobre panel |
-| Regla | `--rule`, `--rule-soft` | hairlines, la separacion por defecto |
-| Texto | `--text`, `--text-2`, `--text-3` | tres niveles, tintados al mismo hue calido |
-| Accion | `--ember` | la unica accion principal de cada pantalla, y la marca |
-| Medicion | `--signal` | datos, foco, seleccion |
-| Semanticos | `--ok`, `--warn`, `--danger` | siempre con texto o forma, nunca solo color |
+| Crema | `#ece2d0` | papel del tema claro |
+| Tinta | `#130918` | texto, bloques de contraste, lienzo del tema noche |
+| Dorado | `#f1aa1c` | **la accion**: botones principales |
+| Neon rojo | `#e8271f` | error, ruta 1 |
+| Neon ambar | `#f2b01e` | advertencia y gotchas |
+| Neon verde | `#2fb84f` | acierto, leccion vista, ruta 2 |
+| Neon cian | `#3fbcdf` | datos y medicion, ruta 3 |
+| Neon azul | `#2f4bc7` | foco y seleccion |
+
+Roles: `--canvas`, `--sunken`, `--surface`, `--surface-raise`, `--contraste`, `--rule`,
+`--text` en tres niveles, `--accion`, `--foco`, `--ok`, `--warn`, `--danger`, `--dato`, y
+un `-wash` por cada estado para fondos suaves.
 
 Reglas:
 
-- **Ember es escaso.** Si aparece en todos lados deja de senalar la accion. En una pantalla
-  hay un solo boton `btn-key`.
-- **Nada de gris puro.** Todo neutro esta tintado desde el mismo hue calido; el texto
-  secundario se deriva del fondo, no de un gris generico.
-- **El color nunca es el unico codigo.** Las calificaciones de repaso llevan etiqueta, las
-  respuestas del examen llevan letra y las correctas llevan tambien el cambio de estado.
+- **El dorado es solo para la accion.** Un boton dorado por pantalla. Si aparece en todo,
+  deja de senalar nada.
+- **Los neones son codigo, no decoracion.** Cada ruta tiene el suyo, cada estado el suyo.
+  La unica excepcion es la franja de cinco neones, que es la firma de la marca.
+- **El color nunca es el unico codigo**: las lecciones vistas llevan ademas la palomita, las
+  respuestas del examen llevan letra, las calificaciones llevan etiqueta.
 - Contraste minimo: texto 4.5:1, texto grande y controles 3:1, en ambos temas.
 
 ## Tipografia
 
-Tres familias auto-hospedadas en `fonts/`, subconjuntos latin y latin-ext, 187 KB en total.
-Nada de fuentes del sistema como voz de display.
+Tres familias auto-hospedadas en `fonts/`, subconjuntos latin y latin-ext.
 
 | Rol | Familia | Donde |
 |---|---|---|
-| Display | Bricolage Grotesque 600/700 | titulares, preguntas de tarjeta, nombres |
-| Texto | Instrument Sans 400/500/600 | interfaz y lectura |
-| Datos | JetBrains Mono 400/500 | cifras, codigo, intervalos, fechas |
+| Display | Barlow Condensed 700, en mayusculas | titulares, nombres de curso, preguntas |
+| Texto | Barlow 400/500/600 | interfaz, lectura y cuadernos |
+| Datos | JetBrains Mono 400 | cifras, codigo, intervalos, fechas |
 
-- Toda cifra comparable va en mono con `tabular-nums`: las columnas no bailan al cambiar.
-- Escala de roles fija (`--t-display` a `--t-label`), sin valores sueltos.
-- Medida de lectura de 68ch como tope (`--measure`).
-- Las etiquetas en versalitas llevan `0.09em` de tracking; los titulares, tracking negativo.
+- El display siempre va en mayusculas y condensado: es la voz de Arc Raiders.
+- Toda cifra comparable va en mono con `tabular-nums`.
+- Escala de roles fija, de `--t-hero` a `--t-label`. Medida de lectura de 70ch.
 
 ## Espacio y forma
 
@@ -66,7 +77,8 @@ Nada de fuentes del sistema como voz de display.
   obliga a redondear mal.
 - Ritmo por contraste: grupos apretados, separaciones generosas. Mas aire arriba de un
   titulo que abajo.
-- Radios de 6 a 20 px segun el tamano del elemento.
+- Radios amplios, de 8 a 28 px, y pildoras para botones y chips: la forma amable de una
+  plataforma educativa.
 - Profundidad con desplazamiento mas desenfoque suave (`--e1`, `--e2`). Nunca un halo plano
   sin offset, nunca sombra dura de bloque.
 
@@ -74,7 +86,8 @@ Nada de fuentes del sistema como voz de display.
 
 Un solo momento autoral: **la respuesta de la tarjeta se descubre con una cortina** desde
 arriba (`clip-path`), 320 ms, `cubic-bezier(0.16, 1, 0.3, 1)`. Los cuatro botones de
-calificacion entran escalonados 40 ms, con tope de 120 ms.
+calificacion entran escalonados 40 ms, con tope de 120 ms. Las tarjetas de curso se elevan
+3 px al pasar el cursor; el interruptor de tema desliza su pastilla.
 
 Todo lo demas es retroalimentacion: 120 ms para hover y foco, 200 ms para cambios de estado.
 Nada de rebote ni elastico. Con `prefers-reduced-motion` todo se apaga.
@@ -99,15 +112,15 @@ Sacados del piso de calidad de Impeccable, con la decision que tomamos en cada c
 | Patron | Que hicimos |
 |---|---|
 | Numeros de seccion (01 / 02 / 03) decorativos | Fuera de la navegacion. Solo quedan donde el orden informa: cola de repaso y preguntas del examen |
-| Rejilla de tarjetas iguales como estructura de pagina | El panel usa una frase dominante, cifras separadas por hairlines y listas con reglas |
-| La plantilla de metrica heroica | Las cifras viven en una fila de hairlines, no en cuatro tarjetas con sombra |
+| Rejilla de tarjetas iguales como relleno | Solo el catalogo usa tarjetas, porque cada una es un curso real con su progreso. El resto son listas con reglas |
+| La plantilla de metrica heroica | El titular es una frase, no un numero suelto. Las cifras van en bloques planos sin sombra |
 | Tarjetas dentro de tarjetas | Ninguna. Las listas se separan con reglas de 1px |
 | Barra de color al costado de tarjetas o filas | Ninguna. El gotcha se marca con su icono, no con un borde ambar |
 | Etiqueta o kicker encima de un titular | Ninguna. El titular se sostiene solo |
 | Texto con gradiente, vidrio esmerilado decorativo | Ninguno. El enfasis es peso y tamano |
 | Fuente del sistema como voz de display | Tres familias auto-hospedadas |
 | Emoji como iconografia | Set propio dibujado |
-| Anillos de progreso decorativos | El unico medidor es una barra de 3px atada a un dato real |
+| Anillos de progreso decorativos | Los medidores son barras atadas a un dato real: lecciones vistas o aciertos |
 
 ## Verificacion
 
@@ -120,6 +133,12 @@ Antes de dar por cerrado un cambio visual, con la app corriendo:
 4. Anchos de 1400, 1100, 760 y 430 px. Sin scroll horizontal, sin texto cortado.
 5. Teclado completo: foco visible y orden igual al visual.
 6. Movimiento con `prefers-reduced-motion` activado.
+
+## Alcance de la plataforma
+
+Aqui solo entra el contenido de los cursos: lecciones, cuadernos, tarjetas, gotchas
+tecnicos, snippets y simulacros. Lo administrativo (inscripciones, cuentas, vouchers,
+fechas del festival) vive en `01_plan/plan-estudio.md`, no en la app.
 
 ## Estructura de archivos
 

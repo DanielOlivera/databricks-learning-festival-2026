@@ -1,5 +1,5 @@
-/* Study Lab: repaso espaciado, gotchas, cheatsheets y simulacros.
-   El material vive en data/seed.js. El avance personal vive en localStorage.
+/* Study Lab: cursos, cuadernos, repaso espaciado, gotchas y simulacros.
+   Material en data/seed.js. Avance en localStorage. Cuadernos en IndexedDB.
    La capa visual vive en ../ui: aqui no se escriben colores ni tamanos. */
 (() => {
 "use strict";
@@ -12,41 +12,84 @@ const $$ = (s) => [...document.querySelectorAll(s)];
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const icono = (n, clase = "i") => `<svg class="${clase}" aria-hidden="true"><use href="../ui/icons.svg#${n}"></use></svg>`;
 
-/* ---------- Estado ---------- */
+/* ================= Estado ================= */
 const vacio = () => ({
-  tarjetas: {},          // id -> {ease, intervalo, due, reps, lapses, vista}
-  gotchasPropios: [],
-  gotchasOcultos: [],
-  snippetsPropios: [],
-  tarjetasPropias: [],
+  tarjetas: {},          // idTarjeta -> {ease, intervalo, due, reps, lapses, vista}
+  lecciones: {},         // cursoId -> { n: {hecha, fecha} }
+  gotchasPropios: [], gotchasOcultos: [], snippetsPropios: [], tarjetasPropias: [],
   historial: {},         // fecha -> {vistas, buenas}
   examenes: [],
-  tema: "noche"
+  ultimo: null,          // {curso, leccion} para "seguir donde quede"
+  tema: "dia"
 });
-
 let S = cargar();
 
 function cargar() {
   try {
     const raw = localStorage.getItem(CLAVE);
     return raw ? Object.assign(vacio(), JSON.parse(raw)) : vacio();
-  } catch (e) {
-    console.warn("No se pudo leer el avance guardado", e);
-    return vacio();
-  }
+  } catch (e) { console.warn("No se pudo leer el avance", e); return vacio(); }
 }
 function guardar() {
   try { localStorage.setItem(CLAVE, JSON.stringify(S)); }
   catch (e) { aviso("No se pudo guardar el avance"); }
 }
 
-/* ---------- Datos combinados ---------- */
+/* ================= Cuadernos en IndexedDB ================= */
+const DB = { conn: null };
+function db() {
+  if (DB.conn) return DB.conn;
+  DB.conn = new Promise((ok, fail) => {
+    const req = indexedDB.open("study-lab", 1);
+    req.onupgradeneeded = () => req.result.createObjectStore("notas");
+    req.onsuccess = () => ok(req.result);
+    req.onerror = () => fail(req.error);
+  });
+  return DB.conn;
+}
+async function leerNota(clave) {
+  try {
+    const d = await db();
+    return await new Promise((ok) => {
+      const r = d.transaction("notas").objectStore("notas").get(clave);
+      r.onsuccess = () => ok(r.result || null);
+      r.onerror = () => ok(null);
+    });
+  } catch { return null; }
+}
+async function escribirNota(clave, valor) {
+  const d = await db();
+  return new Promise((ok, fail) => {
+    const tx = d.transaction("notas", "readwrite");
+    tx.objectStore("notas").put(valor, clave);
+    tx.oncomplete = ok; tx.onerror = () => fail(tx.error);
+  });
+}
+async function clavesNotas() {
+  try {
+    const d = await db();
+    return await new Promise((ok) => {
+      const r = d.transaction("notas").objectStore("notas").getAllKeys();
+      r.onsuccess = () => ok(r.result || []);
+      r.onerror = () => ok([]);
+    });
+  } catch { return []; }
+}
+let NOTAS_CON_TEXTO = new Set();
+async function refrescarClaves() { NOTAS_CON_TEXTO = new Set(await clavesNotas()); }
+
+/* ================= Datos combinados ================= */
 const todasTarjetas = () => [...SEED.tarjetas, ...S.tarjetasPropias];
 const todosGotchas = () => [...SEED.gotchas.filter(g => !S.gotchasOcultos.includes(g.id)), ...S.gotchasPropios];
 const todosSnippets = () => [...SEED.snippets, ...S.snippetsPropios];
-const cursoNombre = (id) => (SEED.cursos.find(c => c.id === id) || {}).nombre || id;
+const curso = (id) => SEED.cursos.find(c => c.id === id);
+const estadoLeccion = (cid, n) => (S.lecciones[cid] || {})[n] || {};
+function vistasCurso(cid) {
+  const c = curso(cid);
+  return Object.values(S.lecciones[cid] || {}).filter(l => l.hecha).length;
+}
 
-/* ---------- SM-2 ---------- */
+/* ================= SM-2 ================= */
 function prog(id) {
   return S.tarjetas[id] || { ease: 2.5, intervalo: 0, due: null, reps: 0, lapses: 0, vista: false };
 }
@@ -75,12 +118,9 @@ function cuando(p, grado) {
   if (n.intervalo < 30) return n.intervalo + " dias";
   return Math.round(n.intervalo / 30) + " meses";
 }
-const vence = (id) => {
-  const p = prog(id);
-  return !p.vista || !p.due || new Date(p.due) <= new Date();
-};
-function cola(curso) {
-  const due = todasTarjetas().filter(c => (!curso || c.curso === curso) && vence(c.id));
+const vence = (id) => { const p = prog(id); return !p.vista || !p.due || new Date(p.due) <= new Date(); };
+function cola(cursoId) {
+  const due = todasTarjetas().filter(c => (!cursoId || c.curso === cursoId) && vence(c.id));
   due.sort((a, b) => {
     const pa = prog(a.id), pb = prog(b.id);
     if (pa.vista !== pb.vista) return pa.vista ? -1 : 1;
@@ -88,8 +128,17 @@ function cola(curso) {
   });
   return due;
 }
+function racha() {
+  let n = 0;
+  for (let i = 0; i < 400; i++) {
+    const f = new Date(Date.now() - i * DIA).toISOString().slice(0, 10);
+    if ((S.historial[f] || {}).vistas > 0) n++;
+    else if (i > 0) break;
+  }
+  return n;
+}
 
-/* ---------- Avisos y modal ---------- */
+/* ================= Avisos y modal ================= */
 let tAviso;
 function aviso(msg) {
   $("#notice-txt").textContent = msg;
@@ -101,133 +150,211 @@ function aviso(msg) {
 function modal(titulo, campos, alGuardar) {
   $("#modal-tit").textContent = titulo;
   $("#modal-campos").innerHTML = campos.map(c => {
-    const etiqueta = `<label class="form-label" for="f-${c.k}">${esc(c.lbl)}</label>`;
-    if (c.tipo === "textarea") return etiqueta + `<textarea class="field ${c.mono ? "mono" : ""}" id="f-${c.k}">${esc(c.val || "")}</textarea>`;
-    if (c.tipo === "select") return etiqueta + `<select class="field" id="f-${c.k}">${c.ops.map(o =>
+    const lbl = `<label class="form-label" for="f-${c.k}">${esc(c.lbl)}</label>`;
+    if (c.tipo === "textarea") return lbl + `<textarea class="field ${c.mono ? "mono" : ""}" id="f-${c.k}">${esc(c.val || "")}</textarea>`;
+    if (c.tipo === "select") return lbl + `<select class="field" id="f-${c.k}">${c.ops.map(o =>
       `<option value="${esc(o)}"${o === c.val ? " selected" : ""}>${esc(o)}</option>`).join("")}</select>`;
-    return etiqueta + `<input class="field" id="f-${c.k}" value="${esc(c.val || "")}">`;
+    return lbl + `<input class="field" id="f-${c.k}" value="${esc(c.val || "")}">`;
   }).join("");
   $("#veil").classList.remove("hidden");
   $("#f-" + campos[0].k).focus();
   $("#modal-guardar").onclick = () => {
     const datos = {};
     campos.forEach(c => { datos[c.k] = $("#f-" + c.k).value.trim(); });
-    alGuardar(datos);
-    cerrarModal();
+    alGuardar(datos); cerrarModal();
   };
   $("#modal-cancelar").onclick = cerrarModal;
 }
 const cerrarModal = () => $("#veil").classList.add("hidden");
 
-/* ---------- Navegacion ---------- */
-let vista = "panel";
+/* ================= Navegacion ================= */
+let vista = "cursos", cursoActual = null, leccionActual = null;
 const pintores = {};
-function ir(v) {
+function ir(v, opciones = {}) {
   vista = v;
-  $$(".nav-item").forEach(b => b.setAttribute("aria-current", b.dataset.view === v ? "page" : "false"));
+  const raiz = { curso: "cursos", cuaderno: "cursos" }[v] || v;
+  $$(".nav-item").forEach(b => b.setAttribute("aria-current", b.dataset.view === raiz ? "page" : "false"));
   $$(".view").forEach(s => s.classList.add("hidden"));
   $("#view-" + v).classList.remove("hidden");
-  pintores[v]();
-  document.querySelector(".main").scrollIntoView({ block: "start" });
+  pintores[v](opciones);
+  window.scrollTo({ top: 0 });
 }
 
-/* ---------- Panel ---------- */
-function racha() {
-  let n = 0;
-  for (let i = 0; i < 400; i++) {
-    const f = new Date(Date.now() - i * DIA).toISOString().slice(0, 10);
-    const h = S.historial[f];
-    if (h && h.vistas > 0) n++;
-    else if (i > 0) break;
-  }
-  return n;
-}
-pintores.panel = function () {
+/* ================= Cursos ================= */
+pintores.cursos = function () {
   const cs = todasTarjetas();
   const pendientes = cola("");
-  const nuevas = cs.filter(c => !prog(c.id).vista).length;
   const dominadas = cs.filter(c => prog(c.id).intervalo >= 7).length;
-  const pct = cs.length ? Math.round(dominadas / cs.length * 100) : 0;
+  const totalLecc = SEED.cursos.reduce((a, c) => a + c.lecciones, 0);
+  const vistas = SEED.cursos.reduce((a, c) => a + vistasCurso(c.id), 0);
   const h = S.historial[HOY()] || { vistas: 0, buenas: 0 };
 
-  $("#today-line").innerHTML = pendientes.length
-    ? `<em>${pendientes.length}</em> ${pendientes.length === 1 ? "tarjeta lista" : "tarjetas listas"} para repasar`
-    : "Nada pendiente por hoy";
-  $("#today-note").textContent = pendientes.length
-    ? `${cs.length} tarjetas en total, ${dominadas} ya dominadas. Cinco minutos alcanzan para bajar la cola.`
-    : `${dominadas} de ${cs.length} tarjetas dominadas. Las proximas vuelven solas cuando toque.`;
+  $("#hero-line").innerHTML = pendientes.length
+    ? `<em>${pendientes.length}</em> tarjetas te esperan`
+    : `Vas <em>${Math.round(vistas / totalLecc * 100)}%</em> del festival`;
+  $("#hero-note").textContent = `${vistas} de ${totalLecc} lecciones vistas en las tres rutas. ` +
+    (pendientes.length ? "Baja la cola de repaso y sigue con la leccion del dia." : "Nada pendiente de repaso: sigue avanzando en las lecciones.");
   $("#btn-repasar").classList.toggle("hidden", pendientes.length === 0);
+  const ult = S.ultimo && curso(S.ultimo.curso);
+  $("#btn-seguir").classList.toggle("hidden", !ult);
+  if (ult) $("#btn-seguir").textContent = `Seguir en ${S.ultimo.curso}`;
 
-  $("#fig-dominio").innerHTML = `${pct}<span class="figure-unit">%</span>`;
-  $("#fig-nuevas").textContent = nuevas;
-  $("#fig-hoy").textContent = h.vistas;
-  $("#fig-acierto").innerHTML = `${h.vistas ? Math.round(h.buenas / h.vistas * 100) : 0}<span class="figure-unit">%</span>`;
+  $("#stats").innerHTML = [
+    ["accion", vistas + "/" + totalLecc, "Lecciones vistas"],
+    ["dato", pendientes.length, "Repaso pendiente"],
+    ["ok", dominadas + "/" + cs.length, "Tarjetas dominadas"],
+    ["", h.vistas, "Repasadas hoy"]
+  ].map(([tono, val, key]) =>
+    `<div class="stat"><span class="stat-val"${tono ? ` data-tono="${tono}"` : ""}>${val}</span>
+     <span class="stat-key">${key}</span></div>`).join("");
+
+  const rutas = {};
+  SEED.cursos.forEach(c => (rutas[c.ruta] = rutas[c.ruta] || []).push(c));
+  $("#rutas").innerHTML = Object.entries(rutas).map(([ruta, cursos], i) => {
+    const lecc = cursos.reduce((a, c) => a + c.lecciones, 0);
+    const hechas = cursos.reduce((a, c) => a + vistasCurso(c.id), 0);
+    return `<section class="ruta">
+      <div class="ruta-head">
+        <span class="ruta-marca" data-ruta="${i}"></span>
+        <h2 class="t-title">${esc(ruta)}</h2>
+        <span class="ruta-cuenta">${hechas} de ${lecc} lecciones</span>
+      </div>
+      <div class="cursos-grid">${cursos.map(c => {
+        const v = vistasCurso(c.id);
+        const pct = Math.round(v / c.lecciones * 100);
+        const tarjetas = todasTarjetas().filter(t => t.curso === c.id).length;
+        return `<button class="curso-card" data-curso="${c.id}">
+          <span class="curso-id">${c.id}</span>
+          <span class="curso-nombre">${esc(c.nombre)}</span>
+          <span class="meter" data-tono="${pct === 100 ? "" : "accion"}"><i style="width:${pct}%"></i></span>
+          <span class="curso-pie">
+            <span>${v}/${c.lecciones} lecciones</span>
+            <span>${tarjetas ? tarjetas + " tarjetas" : "sin tarjetas"}</span>
+          </span>
+        </button>`;
+      }).join("")}</div>
+    </section>`;
+  }).join("");
+  $$("#rutas [data-curso]").forEach(b => b.onclick = () => ir("curso", { curso: b.dataset.curso }));
+
   $("#streak").textContent = racha();
   const cuenta = $("#count-due");
   cuenta.textContent = pendientes.length;
   cuenta.dataset.cero = pendientes.length ? "0" : "1";
-
-  // Constancia: 8 columnas de semanas, filas de lunes a domingo
-  const dias = ["L", "M", "M", "J", "V", "S", "D"];
-  const hoyDow = (new Date().getDay() + 6) % 7;
-  const total = 7 * 8;
-  const desde = new Date(Date.now() - (total - 1 - (6 - hoyDow)) * DIA);
-  let celdas = "";
-  for (let fila = 0; fila < 7; fila++) {
-    celdas += `<span class="heat-day">${dias[fila]}</span>`;
-    for (let col = 0; col < 8; col++) {
-      const d = new Date(desde.getTime() + (col * 7 + fila) * DIA);
-      const f = d.toISOString().slice(0, 10);
-      const futuro = d > new Date();
-      const v = (S.historial[f] || {}).vistas || 0;
-      const n = v === 0 ? 0 : v < 5 ? 1 : v < 15 ? 2 : v < 30 ? 3 : 4;
-      celdas += `<span class="heat-cell" data-n="${futuro ? 0 : n}" ${f === HOY() ? 'data-hoy="1"' : ""}
-        title="${f}: ${v} repasos"></span>`;
-    }
-  }
-  $("#heat").innerHTML = celdas;
-  const mes = (d) => d.toLocaleDateString("es", { month: "long" });
-  const m1 = mes(desde), m2 = mes(new Date());
-  $("#heat-rango").textContent = m1 === m2 ? m1 : `${m1} a ${m2}`;
-
-  // Dominio por tema
-  const temas = {};
-  cs.forEach(c => {
-    const t = temas[c.tema] = temas[c.tema] || { tot: 0, dom: 0 };
-    t.tot++; if (prog(c.id).intervalo >= 7) t.dom++;
-  });
-  $("#temas").innerHTML = Object.entries(temas).sort((a, b) => b[1].tot - a[1].tot).map(([n, t]) => `
-    <div class="rows-row">
-      <span class="rows-name">${esc(n)}</span>
-      <span class="rows-val">${t.dom}/${t.tot}</span>
-      <span class="meter"><i style="width:${Math.round(t.dom / t.tot * 100)}%"></i></span>
-    </div>`).join("");
-
-  // Cursos agrupados por ruta
-  const rutas = {};
-  SEED.cursos.forEach(c => (rutas[c.ruta] = rutas[c.ruta] || []).push(c));
-  $("#cursos").innerHTML = Object.entries(rutas).map(([ruta, cursos]) => `
-    <h3 class="t-label ruta-title">${esc(ruta)}</h3>
-    <div class="rows">${cursos.map(c => {
-      const propias = cs.filter(x => x.curso === c.id);
-      const dom = propias.filter(x => prog(x.id).intervalo >= 7).length;
-      const p = propias.length ? Math.round(dom / propias.length * 100) : 0;
-      return `<div class="rows-row">
-        <span class="rows-name">${c.id} ${esc(c.nombre)}</span>
-        <span class="rows-val">${propias.length ? p + "%" : "sin tarjetas"}</span>
-        <span class="meter" data-tono="ember"><i style="width:${p}%"></i></span>
-      </div>`;
-    }).join("")}</div>`).join("");
 };
 
-/* ---------- Repaso ---------- */
+/* ================= Curso ================= */
+pintores.curso = function ({ curso: cid } = {}) {
+  cursoActual = cid || cursoActual;
+  const c = curso(cursoActual);
+  const v = vistasCurso(c.id);
+  $("#curso-nombre").textContent = `${c.id} ${c.nombre}`;
+  $("#curso-sub").textContent = `${c.ruta} · ${v} de ${c.lecciones} lecciones vistas`;
+  $("#curso-link").href = c.url;
+  $("#curso-meter").style.width = Math.round(v / c.lecciones * 100) + "%";
+
+  const temario = c.temario.length ? c.temario
+    : Array.from({ length: c.lecciones }, (_, i) => ({ n: i + 1, titulo: `Leccion ${i + 1}`, tipo: "", url: c.url }));
+  $("#curso-nota").textContent = c.temario.length ? ""
+    : "Los titulos reales de este curso se llenan cuando lo empieces; el cuaderno de cada leccion ya funciona.";
+
+  $("#lecciones").innerHTML = temario.map(l => {
+    const e = estadoLeccion(c.id, l.n);
+    const conNota = NOTAS_CON_TEXTO.has(`${c.id}:${l.n}`);
+    return `<button class="leccion" data-n="${l.n}" data-hecha="${e.hecha ? 1 : 0}">
+      <span class="leccion-n">${e.hecha ? "" : String(l.n).padStart(2, "0")}${e.hecha ? icono("ic-listo") : ""}</span>
+      <span>
+        <span class="leccion-txt">${esc(l.titulo)}</span>
+        ${l.tipo ? `<span class="leccion-tipo" style="margin-left:var(--s3)">${esc(l.tipo)}</span>` : ""}
+      </span>
+      <span class="leccion-marcas">
+        ${conNota ? `<span class="nota-marca">${icono("ic-cuaderno")} con notas</span>` : ""}
+        ${icono("ic-flecha")}
+      </span>
+    </button>`;
+  }).join("");
+  $$("#lecciones .leccion").forEach(b => b.onclick = () => ir("cuaderno", { curso: c.id, leccion: +b.dataset.n }));
+};
+
+/* ================= Cuaderno ================= */
+let guardarTimer = null, notaClave = null;
+pintores.cuaderno = async function ({ curso: cid, leccion } = {}) {
+  cursoActual = cid || cursoActual;
+  leccionActual = leccion || leccionActual;
+  const c = curso(cursoActual);
+  const l = (c.temario.find(x => x.n === leccionActual)) || { n: leccionActual, titulo: `Leccion ${leccionActual}`, url: c.url, tipo: "" };
+  notaClave = `${c.id}:${l.n}`;
+  S.ultimo = { curso: c.id, leccion: l.n };
+  guardar();
+
+  $("#nota-titulo").textContent = l.titulo;
+  $("#nota-sub").textContent = `${c.id} ${c.nombre}${l.tipo ? " · " + l.tipo : ""}`;
+  $("#volver-curso-txt").textContent = `Volver a ${c.id}`;
+  const link = $("#nota-link");
+  link.href = l.url; link.classList.remove("hidden");
+  marcarBotonHecha();
+
+  const nota = await leerNota(notaClave);
+  const canvas = $("#canvas");
+  canvas.innerHTML = nota ? nota.html : "";
+  $("#guardado").textContent = nota ? "Guardado " + hace(nota.ts) : "Sin notas todavia";
+};
+function marcarBotonHecha() {
+  const e = estadoLeccion(cursoActual, leccionActual);
+  const b = $("#btn-hecha");
+  b.textContent = e.hecha ? "Vista" : "Marcar como vista";
+  b.classList.toggle("btn-key", !e.hecha);
+  b.classList.toggle("btn-quiet", !!e.hecha);
+}
+function hace(ts) {
+  const m = Math.round((Date.now() - ts) / 60000);
+  if (m < 1) return "recien";
+  if (m < 60) return `hace ${m} min`;
+  const h = Math.round(m / 60);
+  return h < 24 ? `hace ${h} h` : `el ${new Date(ts).toISOString().slice(0, 10)}`;
+}
+function programarGuardado() {
+  $("#guardado").textContent = "Escribiendo";
+  clearTimeout(guardarTimer);
+  guardarTimer = setTimeout(async () => {
+    const html = $("#canvas").innerHTML;
+    await escribirNota(notaClave, { html, ts: Date.now() });
+    NOTAS_CON_TEXTO.add(notaClave);
+    $("#guardado").textContent = "Guardado recien";
+  }, 700);
+}
+function comprimirImagen(file, max = 1400) {
+  return new Promise((ok) => {
+    const fr = new FileReader();
+    fr.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const escala = Math.min(1, max / Math.max(img.width, img.height));
+        const cv = document.createElement("canvas");
+        cv.width = Math.round(img.width * escala);
+        cv.height = Math.round(img.height * escala);
+        cv.getContext("2d").drawImage(img, 0, 0, cv.width, cv.height);
+        ok(cv.toDataURL("image/jpeg", 0.82));
+      };
+      img.src = fr.result;
+    };
+    fr.readAsDataURL(file);
+  });
+}
+async function insertarImagen(file) {
+  const src = await comprimirImagen(file);
+  document.execCommand("insertHTML", false, `<img src="${src}" alt="">`);
+  programarGuardado();
+}
+
+/* ================= Repaso ================= */
 let actual = null, mostrada = false, filtro = "";
 pintores.repaso = function () {
   const sel = $("#filtro-curso");
   if (!sel.options.length) {
     const cursos = [...new Set(todasTarjetas().map(c => c.curso))];
     sel.innerHTML = `<option value="">Todos los cursos</option>` +
-      cursos.map(id => `<option value="${id}">${id} ${esc(cursoNombre(id))}</option>`).join("");
+      cursos.map(id => `<option value="${id}">${id} ${esc(curso(id).nombre)}</option>`).join("");
     sel.onchange = () => { filtro = sel.value; actual = null; pintores.repaso(); };
   }
   const q = cola(filtro);
@@ -238,7 +365,7 @@ pintores.repaso = function () {
   if (!actual || !q.some(c => c.id === actual.id)) actual = q[0];
   const p = prog(actual.id);
   mostrada = false;
-  $("#repaso-sub").textContent = `${q.length} en cola · ${cursoNombre(actual.curso)}`;
+  $("#repaso-sub").textContent = `${q.length} en cola · ${curso(actual.curso).nombre}`;
   $("#card-tema").textContent = actual.tema || "";
   $("#card-estado").textContent = p.vista ? `repaso ${p.reps} · ease ${p.ease.toFixed(2)}` : "nueva";
   $("#card-q").textContent = actual.frente;
@@ -250,8 +377,7 @@ pintores.repaso = function () {
   $("#queue").innerHTML = q.slice(0, 12).map((c, i) => `
     <div class="queue-item" data-act="${c.id === actual.id ? 1 : 0}">
       <span class="queue-n">${String(i + 1).padStart(2, "0")}</span>
-      <span>${esc(c.frente.slice(0, 54))}</span>
-    </div>`).join("");
+      <span>${esc(c.frente.slice(0, 54))}</span></div>`).join("");
 };
 function mostrar() {
   if (!actual || mostrada) return;
@@ -269,17 +395,17 @@ function calificar(g) {
   guardar();
   actual = null;
   pintores.repaso();
-  const pendientes = cola("").length;
+  const pend = cola("").length;
   const cuenta = $("#count-due");
-  cuenta.textContent = pendientes;
-  cuenta.dataset.cero = pendientes ? "0" : "1";
+  cuenta.textContent = pend;
+  cuenta.dataset.cero = pend ? "0" : "1";
+  $("#streak").textContent = racha();
 }
 
-/* ---------- Gotchas ---------- */
+/* ================= Gotchas ================= */
 pintores.gotchas = function () {
   const f = ($("#buscar-gotcha").value || "").toLowerCase();
-  const lista = todosGotchas().filter(g =>
-    !f || (g.titulo + g.texto + (g.tags || []).join(" ")).toLowerCase().includes(f));
+  const lista = todosGotchas().filter(g => !f || (g.titulo + g.texto + (g.tags || []).join(" ")).toLowerCase().includes(f));
   $("#notes").innerHTML = lista.map(g => `
     <article class="note">
       <div class="note-head">${icono("ic-gotcha")}<h3 class="note-title">${esc(g.titulo)}</h3></div>
@@ -302,8 +428,7 @@ pintores.gotchas = function () {
   $$("#notes [data-ed]").forEach(b => b.onclick = () => editarGotcha(todosGotchas().find(g => g.id === b.dataset.ed)));
   $$("#notes [data-card]").forEach(b => b.onclick = () => {
     const g = todosGotchas().find(x => x.id === b.dataset.card);
-    S.tarjetasPropias.push({ id: "u" + Date.now(), curso: g.curso || "1.1", tema: "Gotchas", frente: g.titulo, reverso: g.texto });
-    guardar(); aviso("Tarjeta creada, ya esta en la cola");
+    crearTarjeta(g.titulo, g.texto, g.curso || "1.1", "Gotchas");
   });
 };
 function editarGotcha(g) {
@@ -313,10 +438,8 @@ function editarGotcha(g) {
     { k: "curso", lbl: "Curso", tipo: "select", ops: SEED.cursos.map(c => c.id), val: g?.curso || "1.1" },
     { k: "tags", lbl: "Etiquetas separadas por coma", val: (g?.tags || []).join(", ") }
   ], (d) => {
-    const obj = {
-      id: g?.id || "u" + Date.now(), titulo: d.titulo, texto: d.texto, curso: d.curso,
-      tags: d.tags ? d.tags.split(",").map(t => t.trim()).filter(Boolean) : []
-    };
+    const obj = { id: g?.id || "u" + Date.now(), titulo: d.titulo, texto: d.texto, curso: d.curso,
+      tags: d.tags ? d.tags.split(",").map(t => t.trim()).filter(Boolean) : [] };
     const i = S.gotchasPropios.findIndex(x => x.id === obj.id);
     if (i >= 0) S.gotchasPropios[i] = obj;
     else {
@@ -326,8 +449,23 @@ function editarGotcha(g) {
     guardar(); pintores.gotchas(); aviso("Guardado");
   });
 }
+function crearTarjeta(frente, reverso, cursoId, tema) {
+  modal("Nueva tarjeta", [
+    { k: "frente", lbl: "Pregunta", val: frente },
+    { k: "reverso", lbl: "Respuesta", tipo: "textarea", val: reverso },
+    { k: "curso", lbl: "Curso", tipo: "select", ops: SEED.cursos.map(c => c.id), val: cursoId },
+    { k: "tema", lbl: "Tema", val: tema || "Notas" }
+  ], (d) => {
+    S.tarjetasPropias.push({ id: "u" + Date.now(), curso: d.curso, tema: d.tema, frente: d.frente, reverso: d.reverso });
+    guardar();
+    const pend = cola("").length;
+    $("#count-due").textContent = pend;
+    $("#count-due").dataset.cero = pend ? "0" : "1";
+    aviso("Tarjeta creada, ya esta en la cola");
+  });
+}
 
-/* ---------- Cheatsheets ---------- */
+/* ================= Cheatsheets ================= */
 pintores.snippets = function () {
   const f = ($("#buscar-snippet").value || "").toLowerCase();
   const lista = todosSnippets().filter(s => !f || (s.titulo + s.codigo).toLowerCase().includes(f));
@@ -346,7 +484,7 @@ pintores.snippets = function () {
   });
 };
 
-/* ---------- Simulacro ---------- */
+/* ================= Simulacro ================= */
 let sim = null;
 const LETRAS = ["A", "B", "C", "D", "E"];
 pintores.examen = function () {
@@ -355,24 +493,13 @@ pintores.examen = function () {
     $("#examen-sub").textContent = `${ex.nombre}: ${ex.preguntasReales} preguntas en ${ex.minutos} minutos. Aqui practicas con ${ex.preguntas.length}.`;
     const hist = S.examenes.slice(-5).reverse();
     $("#examen-body").innerHTML = `
-      <div class="panel-pair">
-        <section>
-          <div class="block-title"><h2 class="t-title">Pesos reales por tema</h2></div>
-          <div class="rows">${ex.temas.map(t => `
-            <div class="rows-row">
-              <span class="rows-name">${esc(t.nombre)}</span>
-              <span class="rows-val">${t.peso}%</span>
-              <span class="meter" data-tono="ember"><i style="width:${t.peso * 4}%"></i></span>
-            </div>`).join("")}</div>
-        </section>
-        <section>
-          <div class="block-title"><h2 class="t-title">Intentos</h2></div>
-          ${hist.length ? `<div class="rows">${hist.map(h => `
-            <div class="rows-row"><span class="rows-name t-num">${h.fecha}</span>
-            <span class="rows-val">${h.score}%</span></div>`).join("")}</div>`
-            : `<p class="t-hint">Todavia no hiciste ninguno. El umbral tipico de aprobacion esta cerca del 70%.</p>`}
-        </section>
-      </div>`;
+      <div class="stats" style="margin-top:0">${ex.temas.map(t =>
+        `<div class="stat"><span class="stat-val" data-tono="accion">${t.peso}<span style="font-size:1rem">%</span></span>
+         <span class="stat-key">${esc(t.nombre)}</span></div>`).join("")}</div>
+      ${hist.length ? `<h2 class="t-title" style="margin-bottom:var(--s4)">Intentos</h2>
+        <div class="rows">${hist.map(h => `<div class="rows-row"><span>${h.fecha}</span>
+        <span class="rows-val">${h.score}%</span></div>`).join("")}</div>`
+        : `<p class="t-hint">Todavia no hiciste ninguno. El umbral tipico de aprobacion esta cerca del 70%.</p>`}`;
     return;
   }
   const { preguntas, respuestas, enviado } = sim;
@@ -407,17 +534,16 @@ function resultado() {
     const t = porTema[p.tema] = porTema[p.tema] || { tot: 0, ok: 0 };
     t.tot++; if (sim.respuestas[i] === p.correcta) t.ok++;
   });
-  return `<section style="margin-top:var(--s10);padding-top:var(--s6);border-top:1px solid var(--rule-soft)">
+  return `<section style="margin-top:var(--s10)">
     <div class="score-line">
-      <span class="score-val">${sim.score}<span class="figure-unit">%</span></span>
+      <span class="score-val">${sim.score}%</span>
       <p class="t-hint" style="margin:0">${sim.score >= 70
         ? "Por encima del umbral tipico de aprobacion. Repasa igual los temas flojos."
         : "Por debajo del umbral tipico. Los temas de abajo son los que hay que repasar."}</p>
     </div>
     <div class="rows">${Object.entries(porTema).map(([n, t]) => `
-      <div class="rows-row"><span class="rows-name">${esc(n)}</span>
-      <span class="rows-val">${t.ok}/${t.tot}</span>
-      <span class="meter" data-tono="${t.ok === t.tot ? "ok" : "ember"}"><i style="width:${Math.round(t.ok / t.tot * 100)}%"></i></span>
+      <div class="rows-row"><span>${esc(n)}</span><span class="rows-val">${t.ok}/${t.tot}</span>
+      <span class="meter" data-tono="${t.ok === t.tot ? "" : "accion"}"><i style="width:${Math.round(t.ok / t.tot * 100)}%"></i></span>
       </div>`).join("")}</div>
     <button class="btn" id="btn-otro" style="margin-top:var(--s6)">Otro simulacro</button>
   </section>`;
@@ -428,49 +554,55 @@ function calificarExamen() {
   sim.score = Math.round(ok / sim.preguntas.length * 100);
   sim.enviado = true;
   S.examenes.push({ fecha: HOY(), score: sim.score });
-  guardar();
-  pintores.examen();
+  guardar(); pintores.examen();
 }
 
-/* ---------- Respaldo ---------- */
-function exportar() {
-  const blob = new Blob([JSON.stringify(S, null, 2)], { type: "application/json" });
+/* ================= Respaldo ================= */
+async function exportar() {
+  const notas = {};
+  for (const k of await clavesNotas()) notas[k] = await leerNota(k);
+  const blob = new Blob([JSON.stringify({ ...S, _notas: notas }, null, 2)], { type: "application/json" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = `study-lab-${HOY()}.json`;
-  a.click();
-  URL.revokeObjectURL(a.href);
-  aviso("Respaldo descargado");
+  a.click(); URL.revokeObjectURL(a.href);
+  aviso("Respaldo descargado, cuadernos incluidos");
 }
 function importar(file) {
   const fr = new FileReader();
-  fr.onload = () => {
+  fr.onload = async () => {
     try {
-      S = Object.assign(vacio(), JSON.parse(fr.result));
-      guardar(); aplicarTema(); ir(vista); aviso("Datos importados");
+      const datos = JSON.parse(fr.result);
+      const notas = datos._notas || {};
+      delete datos._notas;
+      S = Object.assign(vacio(), datos);
+      guardar();
+      for (const [k, v] of Object.entries(notas)) await escribirNota(k, v);
+      await refrescarClaves();
+      aplicarTema(); ir("cursos"); aviso("Datos importados");
     } catch { aviso("El archivo no es valido"); }
   };
   fr.readAsText(file);
 }
 
-/* ---------- Tema ---------- */
+/* ================= Tema ================= */
 function aplicarTema() {
-  const dia = S.tema === "dia";
-  document.documentElement.dataset.tema = dia ? "dia" : "noche";
-  $("#tema-txt").textContent = dia ? "Tema noche" : "Tema dia";
-  $("#btn-tema").querySelector("use").setAttribute("href", `../ui/icons.svg#${dia ? "ic-noche" : "ic-dia"}`);
-  document.querySelector('meta[name="theme-color"]').content = dia ? "#f7f2ec" : "#221a16";
+  const noche = S.tema === "noche";
+  document.documentElement.dataset.tema = noche ? "noche" : "dia";
+  document.querySelector('meta[name="theme-color"]').content = noche ? "#130918" : "#ece2d0";
 }
 
-/* ---------- Enlaces ---------- */
+/* ================= Enlaces ================= */
 $$(".nav-item").forEach(b => b.onclick = () => ir(b.dataset.view));
+$$("[data-volver]").forEach(b => b.onclick = () => ir(b.dataset.volver));
+$("#volver-curso").onclick = () => ir("curso", { curso: cursoActual });
 $("#btn-repasar").onclick = () => ir("repaso");
+$("#btn-seguir").onclick = () => S.ultimo && ir("cuaderno", { curso: S.ultimo.curso, leccion: S.ultimo.leccion });
 $("#btn-mostrar").onclick = mostrar;
 $$(".grade").forEach(b => b.onclick = () => calificar(+b.dataset.g));
 $("#btn-adelantar").onclick = () => {
   todasTarjetas().filter(c => !vence(c.id))
-    .sort((a, b) => new Date(prog(a.id).due) - new Date(prog(b.id).due))
-    .slice(0, 10)
+    .sort((a, b) => new Date(prog(a.id).due) - new Date(prog(b.id).due)).slice(0, 10)
     .forEach(c => { S.tarjetas[c.id].due = new Date().toISOString(); });
   guardar(); pintores.repaso(); aviso("10 tarjetas adelantadas");
 };
@@ -492,25 +624,68 @@ $("#btn-examen").onclick = () => {
 $("#btn-export").onclick = exportar;
 $("#btn-import").onclick = () => $("#file-import").click();
 $("#file-import").onchange = (e) => e.target.files[0] && importar(e.target.files[0]);
-$("#btn-tema").onclick = () => { S.tema = S.tema === "dia" ? "noche" : "dia"; guardar(); aplicarTema(); };
+$("#btn-tema").onclick = () => { S.tema = S.tema === "noche" ? "dia" : "noche"; guardar(); aplicarTema(); };
 $("#veil").onclick = (e) => { if (e.target.id === "veil") cerrarModal(); };
+
+/* --- Cuaderno: barra, imagenes y guardado --- */
+$$("#barra [data-cmd]").forEach(b => b.onclick = () => {
+  $("#canvas").focus();
+  document.execCommand(b.dataset.cmd, false, null);
+  programarGuardado();
+});
+$$("#barra [data-bloque]").forEach(b => b.onclick = () => {
+  $("#canvas").focus();
+  document.execCommand("formatBlock", false, b.dataset.bloque);
+  programarGuardado();
+});
+$("#btn-linea").onclick = () => { $("#canvas").focus(); document.execCommand("insertHorizontalRule"); programarGuardado(); };
+$("#btn-imagen").onclick = () => $("#file-img").click();
+$("#file-img").onchange = (e) => { if (e.target.files[0]) { $("#canvas").focus(); insertarImagen(e.target.files[0]); } e.target.value = ""; };
+$("#btn-a-tarjeta").onclick = () => {
+  const txt = String(window.getSelection() || "").trim();
+  if (!txt) return aviso("Selecciona primero el texto de la respuesta");
+  const l = (curso(cursoActual).temario.find(x => x.n === leccionActual) || {}).titulo || `Leccion ${leccionActual}`;
+  crearTarjeta("", txt, cursoActual, l.slice(0, 40));
+};
+$("#btn-hecha").onclick = () => {
+  const cid = cursoActual, n = leccionActual;
+  S.lecciones[cid] = S.lecciones[cid] || {};
+  const e = S.lecciones[cid][n];
+  if (e && e.hecha) delete S.lecciones[cid][n];
+  else S.lecciones[cid][n] = { hecha: true, fecha: HOY() };
+  guardar(); marcarBotonHecha();
+  aviso(S.lecciones[cid][n] ? "Leccion marcada como vista" : "Marca quitada");
+};
+const canvas = $("#canvas");
+canvas.addEventListener("input", programarGuardado);
+canvas.addEventListener("paste", (e) => {
+  const item = [...(e.clipboardData?.items || [])].find(i => i.type.startsWith("image/"));
+  if (item) { e.preventDefault(); insertarImagen(item.getAsFile()); return; }
+  e.preventDefault();
+  document.execCommand("insertText", false, e.clipboardData.getData("text/plain"));
+  programarGuardado();
+});
+canvas.addEventListener("dragover", (e) => e.preventDefault());
+canvas.addEventListener("drop", (e) => {
+  const f = [...(e.dataTransfer?.files || [])].find(f => f.type.startsWith("image/"));
+  if (f) { e.preventDefault(); insertarImagen(f); }
+});
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && !$("#veil").classList.contains("hidden")) return cerrarModal();
-  if (e.target.matches("input, textarea, select")) return;
+  if (e.target.matches("input, textarea, select") || e.target.id === "canvas") return;
   if (vista !== "repaso" || !$("#veil").classList.contains("hidden")) return;
   if (e.code === "Space" || e.key === "Enter") { e.preventDefault(); mostrada ? calificar(4) : mostrar(); }
   else if (["1", "2", "3", "4"].includes(e.key)) calificar([0, 3, 4, 5][+e.key - 1]);
 });
 
+/* ================= Arranque ================= */
 aplicarTema();
-ir("panel");
+refrescarClaves().then(() => ir("cursos"));
 
-/* Instalacion como app de escritorio */
 let promptInstalar = null;
 window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  promptInstalar = e;
+  e.preventDefault(); promptInstalar = e;
   $("#btn-instalar").classList.remove("hidden");
 });
 $("#btn-instalar").onclick = async () => {
@@ -521,10 +696,7 @@ $("#btn-instalar").onclick = async () => {
   $("#btn-instalar").classList.add("hidden");
   aviso(outcome === "accepted" ? "Instalada: busca el icono en el escritorio" : "Instalacion cancelada");
 };
-window.addEventListener("appinstalled", () => {
-  $("#btn-instalar").classList.add("hidden");
-  aviso("App instalada");
-});
+window.addEventListener("appinstalled", () => { $("#btn-instalar").classList.add("hidden"); aviso("App instalada"); });
 
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   navigator.serviceWorker.register("sw.js", { scope: "/" }).catch(() => {});

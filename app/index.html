@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="es" data-tema="noche">
+<html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Study Lab</title>
-<meta name="description" content="Repaso espaciado, gotchas y simulacros para las certificaciones de Databricks">
-<meta name="theme-color" content="#221a16">
+<meta name="description" content="Plataforma de estudio para las certificaciones de Databricks: lecciones, cuadernos, repaso espaciado y simulacros">
+<meta name="theme-color" content="#ece2d0">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="../ui/icons/icon-192.png">
-<link rel="preload" href="../ui/fonts/bricolage-grotesque-600-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="../ui/fonts/instrument-sans-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../ui/fonts/barlow-condensed-700-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../ui/fonts/barlow-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../ui/fonts/fonts.css">
 <link rel="stylesheet" href="../ui/tokens.css">
 <link rel="stylesheet" href="../ui/base.css">
@@ -27,8 +27,8 @@
     </div>
 
     <nav class="nav" id="nav" aria-label="Secciones">
-      <button class="nav-item" data-view="panel" aria-current="page">
-        <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-panel"></use></svg> Panel</button>
+      <button class="nav-item" data-view="cursos" aria-current="page">
+        <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-cursos"></use></svg> Cursos</button>
       <button class="nav-item" data-view="repaso">
         <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-repaso"></use></svg> Repaso
         <span class="count" id="count-due">0</span></button>
@@ -37,15 +37,12 @@
       <button class="nav-item" data-view="snippets">
         <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-codigo"></use></svg> Cheatsheets</button>
       <button class="nav-item" data-view="examen">
-        <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-examen"></use></svg> Examen</button>
+        <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-examen"></use></svg> Simulacro</button>
     </nav>
 
     <div class="side-foot">
-      <p class="streak"><span class="streak-val" id="streak">0</span><span class="streak-key">dias seguidos</span></p>
       <button class="btn btn-key hidden" id="btn-instalar">
         <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-instalar"></use></svg> Instalar como app</button>
-      <button class="btn btn-quiet" id="btn-tema">
-        <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-dia"></use></svg> <span id="tema-txt">Tema dia</span></button>
       <button class="btn btn-quiet" id="btn-export">
         <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-exportar"></use></svg> Exportar</button>
       <button class="btn btn-quiet" id="btn-import">
@@ -54,157 +51,209 @@
     </div>
   </aside>
 
-  <main class="main" id="main">
-    <!-- PANEL -->
-    <section class="view" id="view-panel">
-      <div class="today">
-        <div>
-          <h1 class="today-line" id="today-line">Cargando</h1>
-          <p class="today-note" id="today-note"></p>
-        </div>
-        <button class="btn btn-key" id="btn-repasar">Empezar repaso
-          <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-flecha"></use></svg></button>
-      </div>
+  <div class="col">
+    <header class="topbar">
+      <p class="racha-inline"><b id="streak">0</b> dias seguidos<span id="racha-extra"></span></p>
+      <button class="toggle-tema" id="btn-tema" aria-label="Cambiar entre tema claro y oscuro">
+        <span><svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-dia"></use></svg></span>
+        <span><svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-noche"></use></svg></span>
+      </button>
+    </header>
 
-      <div class="figures">
-        <div class="figure">
-          <span class="figure-val" data-acento="ember" id="fig-dominio">0<span class="figure-unit">%</span></span>
-          <span class="figure-key">Dominio</span>
-        </div>
-        <div class="figure">
-          <span class="figure-val" id="fig-nuevas">0</span>
-          <span class="figure-key">Sin ver</span>
-        </div>
-        <div class="figure">
-          <span class="figure-val" data-acento="signal" id="fig-hoy">0</span>
-          <span class="figure-key">Repasadas hoy</span>
-        </div>
-        <div class="figure">
-          <span class="figure-val" id="fig-acierto">0<span class="figure-unit">%</span></span>
-          <span class="figure-key">Acierto de hoy</span>
-        </div>
-      </div>
-
-      <div class="panel-pair">
-        <section>
-          <div class="block-title">
-            <h2 class="t-title">Constancia</h2>
-            <span class="t-meta" id="heat-rango"></span>
+    <main class="main" id="main">
+      <!-- CURSOS -->
+      <section class="view" id="view-cursos">
+        <div class="hero">
+          <div class="franja"><i></i><i></i><i></i><i></i><i></i></div>
+          <h1 class="t-hero hero-line" id="hero-line">Tus cursos</h1>
+          <p class="hero-note" id="hero-note"></p>
+          <div class="hero-acts">
+            <button class="btn btn-key" id="btn-repasar">Repasar ahora
+              <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-flecha"></use></svg></button>
+            <button class="btn" id="btn-seguir">Seguir donde quede</button>
           </div>
-          <div class="heat" id="heat"></div>
-          <p class="t-hint">Ocho semanas. Cuanto mas encendido el cuadro, mas tarjetas repasaste ese dia.</p>
-        </section>
-        <section>
-          <div class="block-title">
-            <h2 class="t-title">Dominio por tema</h2>
-            <span class="t-meta">intervalo de 7 dias o mas</span>
-          </div>
-          <div class="rows" id="temas"></div>
-        </section>
-      </div>
+        </div>
 
-      <section>
-        <div class="block-title"><h2 class="t-title">Cursos del festival</h2></div>
-        <div id="cursos"></div>
+        <div class="stats" id="stats"></div>
+        <div id="rutas"></div>
       </section>
-    </section>
 
-    <!-- REPASO -->
-    <section class="view hidden" id="view-repaso">
-      <header class="head">
-        <div>
-          <h1 class="t-display">Repaso</h1>
-          <p class="head-sub" id="repaso-sub"></p>
-        </div>
-        <select id="filtro-curso" class="field" style="width:auto" aria-label="Filtrar por curso"></select>
-      </header>
-
-      <div class="study" id="study">
-        <article class="card-face">
-          <div class="card-top">
-            <span class="t-label" id="card-tema"></span>
-            <span class="t-label t-num" id="card-estado"></span>
+      <!-- CURSO -->
+      <section class="view hidden" id="view-curso">
+        <button class="volver" data-volver="cursos">
+          <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-flecha"></use></svg> Todos los cursos</button>
+        <div class="head">
+          <div class="head-row">
+            <div>
+              <h1 class="t-display" id="curso-nombre"></h1>
+              <p class="head-sub" id="curso-sub"></p>
+            </div>
+            <a class="btn" id="curso-link" target="_blank" rel="noreferrer">Abrir en la Academy
+              <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-externo"></use></svg></a>
           </div>
-          <h2 class="card-q" id="card-q"></h2>
-          <div class="card-a hidden" id="card-a"></div>
-          <button class="btn btn-key btn-wide" id="btn-mostrar" style="margin-top:auto">
-            Mostrar respuesta <kbd>espacio</kbd></button>
-          <div class="grades hidden" id="grades">
-            <button class="grade" data-g="0">Otra vez <span class="grade-when" id="when-0"></span></button>
-            <button class="grade" data-g="3">Dificil <span class="grade-when" id="when-3"></span></button>
-            <button class="grade" data-g="4">Bien <span class="grade-when" id="when-4"></span></button>
-            <button class="grade" data-g="5">Facil <span class="grade-when" id="when-5"></span></button>
-          </div>
-        </article>
-
-        <aside>
-          <div class="aside-block">
-            <h3 class="t-label" style="margin-bottom:var(--s3)">Cola de hoy</h3>
-            <div class="queue" id="queue"></div>
-          </div>
-          <div class="aside-block">
-            <h3 class="t-label" style="margin-bottom:var(--s3)">Atajos</h3>
-            <p class="t-hint"><kbd>espacio</kbd> muestra la respuesta y califica Bien.
-              <kbd>1</kbd> a <kbd>4</kbd> califican de Otra vez a Facil.</p>
-          </div>
-        </aside>
-      </div>
-
-      <div class="empty hidden" id="repaso-vacio">
-        <h2 class="t-title">La cola quedo en cero</h2>
-        <p class="t-hint">Las tarjetas vuelven solas cuando toca. Si quieres seguir, adelanta las proximas
-          o anota en Gotchas lo que acabas de estudiar.</p>
-        <button class="btn" id="btn-adelantar" style="margin-top:var(--s4)">Adelantar 10 tarjetas</button>
-      </div>
-    </section>
-
-    <!-- GOTCHAS -->
-    <section class="view hidden" id="view-gotchas">
-      <header class="head">
-        <div>
-          <h1 class="t-display">Gotchas</h1>
-          <p class="head-sub">Lo que cuesta caro en el examen y en el workspace</p>
+          <div class="meter" data-tono="accion" style="margin-top:var(--s5)"><i id="curso-meter"></i></div>
         </div>
-        <button class="btn btn-key" id="btn-nuevo-gotcha">
-          <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-mas"></use></svg> Nuevo gotcha</button>
-      </header>
-      <div class="search-wrap">
-        <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-buscar"></use></svg>
-        <input class="field" id="buscar-gotcha" placeholder="Buscar por texto o etiqueta">
-      </div>
-      <div class="notes" id="notes"></div>
-    </section>
+        <div class="lecciones" id="lecciones"></div>
+        <p class="t-hint" id="curso-nota" style="margin-top:var(--s5)"></p>
+      </section>
 
-    <!-- CHEATSHEETS -->
-    <section class="view hidden" id="view-snippets">
-      <header class="head">
-        <div>
-          <h1 class="t-display">Cheatsheets</h1>
-          <p class="head-sub">Snippets listos para pegar en el workspace</p>
-        </div>
-        <button class="btn btn-key" id="btn-nuevo-snippet">
-          <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-mas"></use></svg> Nuevo snippet</button>
-      </header>
-      <div class="search-wrap">
-        <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-buscar"></use></svg>
-        <input class="field" id="buscar-snippet" placeholder="Buscar por titulo o codigo">
-      </div>
-      <div class="sheets" id="sheets"></div>
-    </section>
+      <!-- CUADERNO -->
+      <section class="view hidden" id="view-cuaderno">
+        <button class="volver" id="volver-curso">
+          <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-flecha"></use></svg>
+          <span id="volver-curso-txt">Volver al curso</span></button>
 
-    <!-- EXAMEN -->
-    <section class="view hidden" id="view-examen">
-      <header class="head">
-        <div>
-          <h1 class="t-display">Simulacro</h1>
-          <p class="head-sub" id="examen-sub"></p>
+        <div class="cuaderno-head">
+          <div>
+            <h1 class="t-display" id="nota-titulo"></h1>
+            <p class="head-sub" id="nota-sub"></p>
+          </div>
+          <div class="row gap2">
+            <a class="btn btn-quiet hidden" id="nota-link" target="_blank" rel="noreferrer">Ver leccion
+              <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-externo"></use></svg></a>
+            <button class="btn btn-key" id="btn-hecha">Marcar como vista</button>
+          </div>
         </div>
-        <button class="btn btn-key" id="btn-examen">Empezar
-          <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-flecha"></use></svg></button>
-      </header>
-      <div id="examen-body"></div>
-    </section>
-  </main>
+
+        <div class="barra" id="barra">
+          <button class="herr" data-cmd="bold" title="Negrita (Ctrl+B)">
+            <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-negrita"></use></svg></button>
+          <button class="herr" data-cmd="italic" title="Cursiva (Ctrl+I)">
+            <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-cursiva"></use></svg></button>
+          <span class="barra-sep"></span>
+          <button class="herr" data-bloque="h2">Titulo</button>
+          <button class="herr" data-bloque="h3">Subtitulo</button>
+          <button class="herr" data-bloque="p">Parrafo</button>
+          <span class="barra-sep"></span>
+          <button class="herr" data-cmd="insertUnorderedList" title="Lista">
+            <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-lista"></use></svg></button>
+          <button class="herr" data-cmd="insertOrderedList" title="Lista numerada">
+            <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-lista-num"></use></svg></button>
+          <button class="herr" data-bloque="blockquote" title="Cita">
+            <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-cita"></use></svg></button>
+          <button class="herr" data-bloque="pre" title="Bloque de codigo">
+            <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-codigo"></use></svg></button>
+          <span class="barra-sep"></span>
+          <button class="herr" id="btn-imagen" title="Insertar imagen">
+            <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-imagen"></use></svg></button>
+          <button class="herr" id="btn-linea" title="Separador">
+            <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-linea"></use></svg></button>
+          <span class="barra-sep"></span>
+          <button class="herr" id="btn-a-tarjeta" title="Crear tarjeta con lo seleccionado">
+            <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-tarjeta-mas"></use></svg> A tarjeta</button>
+          <span class="guardado" id="guardado"></span>
+        </div>
+
+        <div class="canvas" id="canvas" contenteditable="true" spellcheck="true"
+             data-vacio="Escribe aqui. Puedes pegar imagenes y capturas directamente."></div>
+        <input type="file" id="file-img" accept="image/*" hidden>
+      </section>
+
+      <!-- REPASO -->
+      <section class="view hidden" id="view-repaso">
+        <div class="head">
+          <div class="head-row">
+            <div>
+              <h1 class="t-display">Repaso</h1>
+              <p class="head-sub" id="repaso-sub"></p>
+            </div>
+            <select id="filtro-curso" class="field" style="width:auto" aria-label="Filtrar por curso"></select>
+          </div>
+        </div>
+
+        <div class="study" id="study">
+          <article class="card-face">
+            <div class="card-top">
+              <span class="t-label" id="card-tema"></span>
+              <span class="t-label t-num" id="card-estado"></span>
+            </div>
+            <h2 class="card-q" id="card-q"></h2>
+            <div class="card-a hidden" id="card-a"></div>
+            <button class="btn btn-key btn-wide" id="btn-mostrar" style="margin-top:auto">
+              Mostrar respuesta <kbd>espacio</kbd></button>
+            <div class="grades hidden" id="grades">
+              <button class="grade" data-g="0">Otra vez <span class="grade-when" id="when-0"></span></button>
+              <button class="grade" data-g="3">Dificil <span class="grade-when" id="when-3"></span></button>
+              <button class="grade" data-g="4">Bien <span class="grade-when" id="when-4"></span></button>
+              <button class="grade" data-g="5">Facil <span class="grade-when" id="when-5"></span></button>
+            </div>
+          </article>
+
+          <aside>
+            <div class="aside-block">
+              <h3 class="t-label" style="margin-bottom:var(--s3)">Cola de hoy</h3>
+              <div class="queue" id="queue"></div>
+            </div>
+            <div class="aside-block">
+              <h3 class="t-label" style="margin-bottom:var(--s3)">Atajos</h3>
+              <p class="t-hint"><kbd>espacio</kbd> muestra la respuesta y califica Bien.
+                <kbd>1</kbd> a <kbd>4</kbd> califican de Otra vez a Facil.</p>
+            </div>
+          </aside>
+        </div>
+
+        <div class="empty hidden" id="repaso-vacio">
+          <h2 class="t-title">La cola quedo en cero</h2>
+          <p class="t-hint">Las tarjetas vuelven solas cuando toca. Si quieres seguir, adelanta las proximas
+            o escribe en el cuaderno de la leccion que estes viendo.</p>
+          <button class="btn" id="btn-adelantar" style="margin-top:var(--s4)">Adelantar 10 tarjetas</button>
+        </div>
+      </section>
+
+      <!-- GOTCHAS -->
+      <section class="view hidden" id="view-gotchas">
+        <div class="head">
+          <div class="head-row">
+            <div>
+              <h1 class="t-display">Gotchas</h1>
+              <p class="head-sub">Trampas tecnicas de los cursos, las que cuestan caro en el examen</p>
+            </div>
+            <button class="btn btn-key" id="btn-nuevo-gotcha">
+              <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-mas"></use></svg> Nuevo gotcha</button>
+          </div>
+        </div>
+        <div class="search-wrap">
+          <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-buscar"></use></svg>
+          <input class="field" id="buscar-gotcha" placeholder="Buscar por texto o etiqueta">
+        </div>
+        <div class="notes" id="notes"></div>
+      </section>
+
+      <!-- CHEATSHEETS -->
+      <section class="view hidden" id="view-snippets">
+        <div class="head">
+          <div class="head-row">
+            <div>
+              <h1 class="t-display">Cheatsheets</h1>
+              <p class="head-sub">Snippets listos para pegar en el workspace</p>
+            </div>
+            <button class="btn btn-key" id="btn-nuevo-snippet">
+              <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-mas"></use></svg> Nuevo snippet</button>
+          </div>
+        </div>
+        <div class="search-wrap">
+          <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-buscar"></use></svg>
+          <input class="field" id="buscar-snippet" placeholder="Buscar por titulo o codigo">
+        </div>
+        <div class="sheets" id="sheets"></div>
+      </section>
+
+      <!-- SIMULACRO -->
+      <section class="view hidden" id="view-examen">
+        <div class="head">
+          <div class="head-row">
+            <div>
+              <h1 class="t-display">Simulacro</h1>
+              <p class="head-sub" id="examen-sub"></p>
+            </div>
+            <button class="btn btn-key" id="btn-examen">Empezar
+              <svg class="i" aria-hidden="true"><use href="../ui/icons.svg#ic-flecha"></use></svg></button>
+          </div>
+        </div>
+        <div id="examen-body"></div>
+      </section>
+    </main>
+  </div>
 </div>
 
 <div class="veil hidden" id="veil">

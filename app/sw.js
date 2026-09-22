@@ -1,10 +1,14 @@
-const CACHE = "study-lab-v2";
+const CACHE = "study-lab-v3";
 const ASSETS = [
   "/app/index.html", "/app/js/app.js", "/app/data/seed.js", "/app/manifest.webmanifest",
   "/ui/tokens.css", "/ui/base.css", "/ui/components.css", "/ui/icons.svg",
   "/ui/fonts/fonts.css",
-  "/ui/fonts/bricolage-grotesque-600-latin.woff2", "/ui/fonts/bricolage-grotesque-600-latin-ext.woff2",
-  "/ui/fonts/instrument-sans-400-latin.woff2", "/ui/fonts/instrument-sans-400-latin-ext.woff2",
+  "/ui/fonts/barlow-400-latin.woff2", "/ui/fonts/barlow-400-latin-ext.woff2",
+  "/ui/fonts/barlow-500-latin.woff2", "/ui/fonts/barlow-500-latin-ext.woff2",
+  "/ui/fonts/barlow-600-latin.woff2", "/ui/fonts/barlow-600-latin-ext.woff2",
+  "/ui/fonts/barlow-700-latin.woff2", "/ui/fonts/barlow-700-latin-ext.woff2",
+  "/ui/fonts/barlow-condensed-600-latin.woff2", "/ui/fonts/barlow-condensed-600-latin-ext.woff2",
+  "/ui/fonts/barlow-condensed-700-latin.woff2", "/ui/fonts/barlow-condensed-700-latin-ext.woff2",
   "/ui/fonts/jetbrains-mono-400-latin.woff2", "/ui/fonts/jetbrains-mono-400-latin-ext.woff2",
   "/ui/icons/icon-192.png", "/ui/icons/icon-512.png"
 ];
