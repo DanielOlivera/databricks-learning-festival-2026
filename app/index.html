@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Databricks Study Lab</title>
+<meta name="theme-color" content="#0b0f1a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="side">
+    <div class="brand">
+      <span class="brand-mark"></span>
+      <div>
+        <strong>Study Lab</strong>
+        <small>Databricks 2026</small>
+      </div>
+    </div>
+    <nav id="nav">
+      <button data-view="panel" class="active"><span class="ico">01</span> Panel</button>
+      <button data-view="repaso"><span class="ico">02</span> Repaso <span class="pill" id="pill-due">0</span></button>
+      <button data-view="gotchas"><span class="ico">03</span> Gotchas</button>
+      <button data-view="snippets"><span class="ico">04</span> Cheatsheets</button>
+      <button data-view="examen"><span class="ico">05</span> Examen</button>
+    </nav>
+    <div class="side-foot">
+      <div class="streak-box">
+        <span class="streak-num" id="streak">0</span>
+        <span class="streak-lbl">días seguidos</span>
+      </div>
+      <button class="ghost" id="btn-tema">Tema claro</button>
+      <button class="ghost" id="btn-export">Exportar datos</button>
+      <button class="ghost" id="btn-import">Importar datos</button>
+      <input type="file" id="file-import" accept="application/json" hidden>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- PANEL -->
+    <section class="view" id="view-panel">
+      <header class="view-head">
+        <div>
+          <h1>Panel</h1>
+          <p class="sub" id="panel-sub">Cargando</p>
+        </div>
+        <button class="primary" id="btn-repasar-ya">Repasar ahora</button>
+      </header>
+
+      <div class="grid-kpi">
+        <div class="kpi">
+          <div class="ring" id="ring-dominio"><svg viewBox="0 0 120 120"><circle class="ring-bg" cx="60" cy="60" r="52"></circle><circle class="ring-fg" cx="60" cy="60" r="52"></circle></svg><span class="ring-val" id="val-dominio">0%</span></div>
+          <div class="kpi-txt"><strong>Dominio</strong><small>tarjetas con intervalo de 7 días o más</small></div>
+        </div>
+        <div class="kpi">
+          <div class="big" id="val-due">0</div>
+          <div class="kpi-txt"><strong>Para hoy</strong><small>tarjetas que toca repasar</small></div>
+        </div>
+        <div class="kpi">
+          <div class="big" id="val-nuevas">0</div>
+          <div class="kpi-txt"><strong>Sin ver</strong><small>tarjetas nuevas en la baraja</small></div>
+        </div>
+        <div class="kpi">
+          <div class="big" id="val-hoy">0</div>
+          <div class="kpi-txt"><strong>Repasadas hoy</strong><small id="val-acierto">acierto 0%</small></div>
+        </div>
+      </div>
+
+      <div class="panel-cols">
+        <div class="card">
+          <h2>Constancia</h2>
+          <div class="heat" id="heat"></div>
+          <p class="hint">Cada cuadro es un día de los últimos 8 semanas. Más claro significa más repasos.</p>
+        </div>
+        <div class="card">
+          <h2>Dominio por tema</h2>
+          <div id="temas"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Cursos</h2>
+        <div class="cursos" id="cursos"></div>
+      </div>
+    </section>
+
+    <!-- REPASO -->
+    <section class="view hidden" id="view-repaso">
+      <header class="view-head">
+        <div>
+          <h1>Repaso</h1>
+          <p class="sub" id="repaso-sub"></p>
+        </div>
+        <select id="filtro-curso" class="select"></select>
+      </header>
+
+      <div class="flash-wrap">
+        <div class="flash" id="flash">
+          <div class="flash-meta"><span id="flash-tema"></span><span id="flash-estado"></span></div>
+          <div class="flash-q" id="flash-q"></div>
+          <div class="flash-a hidden" id="flash-a"></div>
+          <button class="primary wide" id="btn-mostrar">Mostrar respuesta <kbd>espacio</kbd></button>
+          <div class="grades hidden" id="grades">
+            <button data-g="0" class="g g0">Otra vez <kbd>1</kbd><small id="lbl-g0"></small></button>
+            <button data-g="3" class="g g3">Difícil <kbd>2</kbd><small id="lbl-g3"></small></button>
+            <button data-g="4" class="g g4">Bien <kbd>3</kbd><small id="lbl-g4"></small></button>
+            <button data-g="5" class="g g5">Fácil <kbd>4</kbd><small id="lbl-g5"></small></button>
+          </div>
+        </div>
+        <div class="flash-side">
+          <div class="card mini">
+            <h3>Cola de hoy</h3>
+            <div class="queue" id="queue"></div>
+          </div>
+          <div class="card mini">
+            <h3>Cómo funciona</h3>
+            <p class="hint">Repetición espaciada SM-2: cada respuesta ajusta el intervalo. Lo que fallas vuelve enseguida, lo que dominas se espacia días o semanas. Repasa todos los días aunque sean cinco minutos.</p>
+          </div>
+        </div>
+      </div>
+      <div class="vacio hidden" id="repaso-vacio">
+        <h2>Nada pendiente por ahora</h2>
+        <p>Volviste a poner la cola en cero. Puedes adelantar tarjetas futuras o escribir gotchas de lo que acabas de estudiar.</p>
+        <button class="primary" id="btn-adelantar">Adelantar 10 tarjetas</button>
+      </div>
+    </section>
+
+    <!-- GOTCHAS -->
+    <section class="view hidden" id="view-gotchas">
+      <header class="view-head">
+        <div>
+          <h1>Gotchas</h1>
+          <p class="sub">Trampas y detalles que cuestan caro en el examen o en el laboratorio</p>
+        </div>
+        <button class="primary" id="btn-nuevo-gotcha">Nuevo gotcha</button>
+      </header>
+      <input class="search" id="buscar-gotcha" placeholder="Buscar por texto o etiqueta">
+      <div class="gotchas" id="gotchas"></div>
+    </section>
+
+    <!-- SNIPPETS -->
+    <section class="view hidden" id="view-snippets">
+      <header class="view-head">
+        <div>
+          <h1>Cheatsheets</h1>
+          <p class="sub">Snippets listos para pegar en el workspace</p>
+        </div>
+        <button class="primary" id="btn-nuevo-snippet">Nuevo snippet</button>
+      </header>
+      <input class="search" id="buscar-snippet" placeholder="Buscar por título o código">
+      <div class="snippets" id="snippets"></div>
+    </section>
+
+    <!-- EXAMEN -->
+    <section class="view hidden" id="view-examen">
+      <header class="view-head">
+        <div>
+          <h1>Simulador de examen</h1>
+          <p class="sub" id="examen-sub">Preguntas con los pesos reales por tema</p>
+        </div>
+        <button class="primary" id="btn-examen">Empezar simulacro</button>
+      </header>
+      <div id="examen-body"></div>
+    </section>
+  </main>
+</div>
+
+<div class="modal hidden" id="modal">
+  <div class="modal-box">
+    <h2 id="modal-tit">Editar</h2>
+    <div id="modal-campos"></div>
+    <div class="modal-acciones">
+      <button class="ghost" id="modal-cancelar">Cancelar</button>
+      <button class="primary" id="modal-guardar">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast hidden" id="toast"></div>
+
+<script src="data/seed.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

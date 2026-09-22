@@ -66,6 +66,21 @@ DROP SCHEMA workspace.lakeflow_lab CASCADE;
 
 Databricks Free Edition, Unity Catalog, Delta Lake, Lakeflow Connect, Spark SQL y PySpark.
 
+## App de estudio (PWA local)
+
+`app/` es una aplicacion web que corre solo en la maquina, sin nube ni cuentas, enfocada en
+aprendizaje por repeticion. Se abre con `estudiar.bat` y se puede instalar desde Chrome como
+app de escritorio con su propia ventana e icono.
+
+- **Panel**: dominio, tarjetas del dia, mapa de constancia, racha y avance por curso
+- **Repaso**: flashcards con repeticion espaciada SM-2, manejables por teclado
+- **Gotchas**: tablero de trampas con etiquetas, buscador y conversion a tarjeta
+- **Cheatsheets**: snippets de SQL y Python con boton de copiar
+- **Examen**: simulacro con los pesos reales por tema y resultado por area
+
+El material esta en `app/data/seed.js` (versionado). El avance personal queda en el navegador,
+con exportar e importar en JSON. Detalles en [`app/README.md`](app/README.md).
+
 ## Seguimiento del progreso
 
 `tools/track.py` lleva el avance leccion por leccion en `01_plan/progreso.csv`, que no se versiona porque es personal.
