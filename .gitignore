@@ -23,3 +23,6 @@ tmp/
 
 # Zips regenerables de notebooks
 *_notebooks.zip
+
+# Progreso personal de estudio (no va al repo)
+01_plan/progreso.csv

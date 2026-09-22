@@ -65,3 +65,17 @@ DROP SCHEMA workspace.lakeflow_lab CASCADE;
 ## Stack
 
 Databricks Free Edition, Unity Catalog, Delta Lake, Lakeflow Connect, Spark SQL y PySpark.
+
+## Seguimiento del progreso
+
+`tools/track.py` lleva el avance leccion por leccion en `01_plan/progreso.csv`, que no se versiona porque es personal.
+
+```
+python tools/track.py              estado general y siguiente leccion pendiente
+python tools/track.py next         abre en el navegador la siguiente pendiente
+python tools/track.py done next    marca la actual y muestra la que sigue
+python tools/track.py done 2963-05 marca una leccion concreta
+python tools/track.py open 2963-07 abre una leccion por id
+python tools/track.py list 2963    lista las lecciones de un curso
+python tools/track.py nota 2963-05 "repasar COPY INTO"
+```
